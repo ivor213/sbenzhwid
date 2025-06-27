@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Panel</title>
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <link rel="stylesheet" href="assets/css/admin.css" />
+</head>
+<body>
+  <canvas id="matrix-canvas"></canvas>
+  <canvas id="grid-canvas"></canvas>
+  <div class="crt-overlay"></div>
+
+  <div class="terminal-container admin-panel">
+    <div class="logo-text" id="logo-text"></div>
+    <div class="admin-header">Admin Panel</div>
+
+    <div class="admin-tabs">
+      <button class="tab-btn active" id="tab-invites" onclick="showTab('invites')">Invites</button>
+      <button class="tab-btn" id="tab-users" onclick="showTab('users')">Users</button>
+      <button class="tab-btn" id="tab-banned" onclick="showTab('banned')">Banned</button>
+      <button class="tab-btn" id="tab-status" onclick="showTab('status')">Server Status</button>
+    </div>
+
+    <section id="section-invites">
+      <h3>Invite Codes</h3>
+      <button class="btn" onclick="generateCode()">Generate New Code</button>
+      <div id="invite-message" class="message"></div>
+      <table class="admin-table" style="margin-top:18px;">
+        <thead>
+          <tr><th>Code</th><th>Actions</th></tr>
+        </thead>
+        <tbody id="invite-list"></tbody>
+      </table>
+    </section>
+
+    <section id="section-users" style="display:none;">
+      <div class="user-header">
+        <h3>Users</h3>
+        <input type="text" id="search-user" placeholder="Search" class="terminal-input search-box"/>
+      </div>
+      <table class="admin-table">
+        <thead>
+          <tr><th>ID / Username</th><th>Email</th><th>Registered</th><th>Actions</th></tr>
+        </thead>
+        <tbody id="user-list"></tbody>
+      </table>
+    </section>
+
+    <section id="section-banned" style="display:none;">
+      <div class="user-header">
+        <h3>Banned Users</h3>
+      </div>
+      <table class="admin-table">
+        <thead>
+          <tr><th>ID / Username</th><th>Email</th><th>Banned For (days)</th><th>Actions</th></tr>
+        </thead>
+        <tbody id="banned-list"></tbody>
+      </table>
+    </section>
+
+    <section id="section-status" style="display:none;">
+      <div class="user-header"><h3>Server Status</h3></div>
+      <div id="status-content" style="margin-top:20px;font-size:16px;"></div>
+    </section>
+
+    <button class="btn" onclick="window.location.href='index.html'">← Logout</button>
+  </div>
+
+  <div class="modal hidden" id="confirm-modal">
+    <div class="modal-box">
+      <p id="modal-message">Are you sure?</p>
+      <div class="modal-buttons">
+        <button id="confirm-yes" class="btn-small">Yes</button>
+        <button id="confirm-no" class="btn-small danger">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="assets/js/admin.js"></script>
+  <script>
+    const logoText = "$BENZ.CLUB";
+    const logoEl = document.getElementById("logo-text");
+    [...logoText].forEach((ch, i) => {
+      const span = document.createElement("span");
+      span.textContent = ch;
+      span.style.animationDelay = `${i * 0.1}s`;
+      span.classList.add("fade-in");
+      logoEl.appendChild(span);
+    });
+
+    let allUsers = [];
+    let statusInterval = null;
+
+    function showModal(message, callback) {
+      const modal = document.getElementById("confirm-modal");
+      document.getElementById("modal-message").textContent = message;
+      modal.classList.remove("hidden");
+
+      const yes = document.getElementById("confirm-yes");
+      const no = document.getElementById("confirm-no");
+
+      yes.onclick = () => {
+        modal.classList.add("hidden");
+        callback(true);
+      };
+      no.onclick = () => {
+        modal.classList.add("hidden");
+        callback(false);
+      };
+    }
+
+    async function fetchData() {
+      const res = await fetch("/api/admin/data");
+      const data = await res.json();
+      allUsers = data.users;
+
+      const inviteList = document.getElementById("invite-list");
+      inviteList.innerHTML = "";
+      data.invites.forEach(code => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td style='font-family:monospace;font-size:15px;'>
+            <span class='invite-code-text' id='invite-code-${code}' onclick='copyInviteCode("${code}")' style='cursor:pointer;'>${code}</span>
+            <span class='copied-float' id='copied-float-${code}' style='display:none;'>Copied!</span>
+          </td>
+          <td style='display:flex;gap:10px;justify-content:center;'>
+            <button class='bin-btn' title='Delete' onclick='deleteInvite("${code}")'>&times;</button>
+          </td>
+        `;
+        inviteList.appendChild(tr);
+      });
+      renderUsers(allUsers);
+      renderBannedUsers(allUsers);
+    }
+
+    function formatDate(isoString) {
+      if (!isoString) return "";
+      const d = new Date(isoString);
+      if (isNaN(d)) return isoString;
+      // Return only YYYY-MM-DD
+      return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+    }
+
+    function renderUsers(users) {
+      const userList = document.getElementById("user-list");
+      userList.innerHTML = "";
+      users.filter(u => !u.bannedUntil || new Date(u.bannedUntil) <= new Date()).forEach(u => {
+        const tr = document.createElement("tr");
+        const isAdmin = u.isAdmin;
+        const regDate = formatDate(u.registeredAt);
+
+        tr.innerHTML = `
+          <td>
+            ${u.userId} - ${u.username}
+            ${isAdmin ? ' <span style=\"color:#8aff8a;\">(admin)</span>' : ''}
+          </td>
+          <td>${u.email}</td>
+          <td>${regDate}</td>
+          <td class="action-buttons">
+            <button class="btn-small" onclick="resetPassword(${u.userId})">Reset Password</button>
+            <button class="btn-small danger" onclick="deleteUser(${u.userId})">Delete</button>
+            ${!isAdmin && (!u.bannedUntil || new Date(u.bannedUntil) <= new Date()) ? `<button class=\"btn-small suspend\" onclick=\"banUser(${u.userId}, '${u.username}')\">Ban</button>` : ''}
+            ${!isAdmin
+              ? `<button class=\"btn-small\" onclick=\"promoteAdmin(${u.userId})\">Make Admin</button>`
+              : `<button class=\"btn-small danger\" onclick=\"demoteAdmin(${u.userId})\">Remove Admin</button>`}
+          </td>
+        `;
+        userList.appendChild(tr);
+      });
+    }
+
+    function renderBannedUsers(users) {
+      const bannedList = document.getElementById("banned-list");
+      bannedList.innerHTML = "";
+      users.filter(u => u.bannedUntil && new Date(u.bannedUntil) > new Date()).forEach(u => {
+        const tr = document.createElement("tr");
+        const daysLeft = Math.ceil((new Date(u.bannedUntil) - new Date()) / (1000 * 60 * 60 * 24));
+        tr.innerHTML = `
+          <td>${u.userId} - ${u.username}</td>
+          <td>${u.email}</td>
+          <td>${daysLeft}</td>
+          <td class="action-buttons">
+            <button class="btn-small" onclick="unbanUser(${u.userId})">Unban</button>
+          </td>
+        `;
+        bannedList.appendChild(tr);
+      });
+    }
+
+    document.getElementById("search-user").addEventListener("input", (e) => {
+      const q = e.target.value.toLowerCase();
+      const filtered = allUsers.filter(u =>
+        u.username.toLowerCase().includes(q) ||
+        u.email.toLowerCase().includes(q) ||
+        (u.userId && u.userId.toString().includes(q))
+      );
+      renderUsers(filtered);
+    });
+
+    async function generateCode() {
+      const msg = document.getElementById('invite-message');
+      msg.textContent = '';
+      const res = await fetch("/api/admin/invite", { method: "POST" });
+      const data = await res.json();
+      if (!data.success) {
+        msg.textContent = data.message || 'Could not generate code.';
+        msg.className = 'message error';
+      } else {
+        msg.textContent = '';
+        fetchData();
+      }
+    }
+
+    async function resetPassword(id) {
+      const newPass = prompt("Enter new password:");
+      if (newPass) {
+        await fetch("/api/admin/reset", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ id, password: newPass })
+        });
+        alert("Password updated.");
+      }
+    }
+
+    async function deleteUser(id) {
+      showModal("Are you sure you want to permanently delete this user?", async (confirmed) => {
+        if (confirmed) {
+          await fetch("/api/admin/delete-user", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ id })
+          });
+          fetchData();
+        }
+      });
+    }
+
+    async function promoteAdmin(id) {
+      showModal("Are you sure you want to make this user an admin?", async (confirmed) => {
+        if (confirmed) {
+          await fetch("/api/admin/promote", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ id })
+          });
+          fetchData();
+        }
+      });
+    }
+
+    async function demoteAdmin(id) {
+      showModal("Are you sure you want to remove this user's admin access?", async (confirmed) => {
+        if (confirmed) {
+          await fetch("/api/admin/demote", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ id })
+          });
+          fetchData();
+        }
+      });
+    }
+
+    async function deleteInvite(code) {
+      showModal("Are you sure you want to delete this invite code?", async (confirmed) => {
+        if (confirmed) {
+          await fetch('/api/admin/delete-invite', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ code })
+          });
+          fetchData();
+        }
+      });
+    }
+
+    async function banUser(id, username) {
+      showBanModal(username, async (days) => {
+        if (!days || isNaN(days) || days <= 0) return;
+        await fetch("/api/admin/ban", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ id, days: Number(days) })
+        });
+        fetchData();
+      });
+    }
+
+    async function unbanUser(id) {
+      showModal("Unban this user?", async (confirmed) => {
+        if (confirmed) {
+          await fetch("/api/admin/unban", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ id })
+          });
+          fetchData();
+        }
+      });
+    }
+
+    function showBanModal(username, callback) {
+      const modal = document.getElementById("confirm-modal");
+      document.getElementById("modal-message").innerHTML = `Ban <b>${username}</b> for how many days?<br><input id='ban-days-input' type='number' min='1' value='1' style='margin-top:10px;width:60px;text-align:center;'>`;
+      modal.classList.remove("hidden");
+      const yes = document.getElementById("confirm-yes");
+      const no = document.getElementById("confirm-no");
+      yes.onclick = () => {
+        modal.classList.add("hidden");
+        const days = parseInt(document.getElementById('ban-days-input').value, 10);
+        callback(days);
+      };
+      no.onclick = () => {
+        modal.classList.add("hidden");
+      };
+    }
+
+    function startMatrix() {
+      const canvas = document.getElementById("matrix-canvas");
+      const ctx = canvas.getContext("2d");
+      let w, h;
+
+      function resizeCanvas() {
+        w = canvas.width = window.innerWidth;
+        h = canvas.height = window.innerHeight;
+      }
+      window.addEventListener("resize", resizeCanvas);
+      resizeCanvas();
+
+      const fontSize = 14;
+      const drops = new Array(Math.floor(w / fontSize)).fill(1);
+
+      function draw() {
+        ctx.fillStyle = "rgba(0,0,0,0.05)";
+        ctx.fillRect(0, 0, w, h);
+        ctx.fillStyle = "#fff";
+        ctx.font = `${fontSize}px monospace`;
+        drops.forEach((y, i) => {
+          ctx.fillText(Math.random() > 0.5 ? "0" : "1", i * fontSize, y * fontSize);
+          drops[i]++;
+          if (drops[i] * fontSize > h && Math.random() > 0.975) drops[i] = 0;
+        });
+      }
+
+      setInterval(draw, 50);
+    }
+
+    function startGrid() {
+      const canvas = document.getElementById("grid-canvas");
+      const ctx = canvas.getContext("2d");
+      let w, h, mouseX, mouseY;
+
+      function resizeCanvas() {
+        w = canvas.width = window.innerWidth;
+        h = canvas.height = window.innerHeight;
+        mouseX = w / 2;
+        mouseY = h / 2;
+      }
+      window.addEventListener("resize", resizeCanvas);
+      resizeCanvas();
+      window.addEventListener("mousemove", e => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+      });
+
+      function draw() {
+        ctx.clearRect(0, 0, w, h);
+        ctx.strokeStyle = "rgba(255,255,255,0.1)";
+        const size = 50;
+        const offsetX = (mouseX - w / 2) / 20;
+        const offsetY = (mouseY - h / 2) / 20;
+        for (let x = 0; x < w; x += size) {
+          for (let y = 0; y < h; y += size) {
+            ctx.strokeRect(x + offsetX, y + offsetY, size, size);
+          }
+        }
+      }
+
+      setInterval(draw, 33);
+    }
+
+    function showTab(tab) {
+      document.getElementById('section-invites').style.display = tab === 'invites' ? '' : 'none';
+      document.getElementById('section-users').style.display = tab === 'users' ? '' : 'none';
+      document.getElementById('section-banned').style.display = tab === 'banned' ? '' : 'none';
+      document.getElementById('section-status').style.display = tab === 'status' ? '' : 'none';
+      document.getElementById('tab-invites').classList.toggle('active', tab === 'invites');
+      document.getElementById('tab-users').classList.toggle('active', tab === 'users');
+      document.getElementById('tab-banned').classList.toggle('active', tab === 'banned');
+      document.getElementById('tab-status').classList.toggle('active', tab === 'status');
+      if (tab === 'status') {
+        fetchStatus();
+        statusInterval = setInterval(fetchStatus, 5000);
+      } else if (statusInterval) {
+        clearInterval(statusInterval);
+        statusInterval = null;
+      }
+    }
+
+    async function fetchStatus() {
+      const el = document.getElementById('status-content');
+      el.innerHTML = 'Loading...';
+      try {
+        const res = await fetch('/api/status');
+        const data = await res.json();
+        el.innerHTML = `
+          <div>Backend: <span style="color:${data.backend==='ok'?'#8aff8a':'#ff4f4f'};font-weight:bold;">${data.backend.toUpperCase()}</span></div>
+          <div>Database: <span style="color:${data.db==='ok'?'#8aff8a':'#ff4f4f'};font-weight:bold;">${data.db.toUpperCase()}</span></div>
+          <div>DB Ping: <span>${data.dbPing !== null ? data.dbPing + ' ms' : 'N/A'}</span></div>
+          <div>Backend Uptime: <span>${Math.floor(data.backendUptime/3600)}h ${(Math.floor(data.backendUptime/60)%60)}m ${(data.backendUptime%60)}s</span></div>
+          <div>DB Uptime: <span>${data.dbUptime !== null ? Math.floor(data.dbUptime/3600)+'h '+(Math.floor(data.dbUptime/60)%60)+'m '+(Math.floor(data.dbUptime%60))+'s' : 'N/A'}</span></div>
+          <div>Memory: <span>${(data.memory.heapUsed/1024/1024).toFixed(1)} MB used / ${(data.memory.heapTotal/1024/1024).toFixed(1)} MB total</span></div>
+          <div>CPU Load: <span>${data.cpuLoad !== undefined ? data.cpuLoad.toFixed(2) : 'N/A'}</span></div>
+          <div>Node.js Version: <span>${data.nodeVersion}</span></div>
+          <div>MongoDB Version: <span>${data.mongoVersion}</span></div>
+          <div>Disk: <span>${data.disk ? `${data.disk.used} used / ${data.disk.size} total (${data.disk.avail} free, ${data.disk.use} used)` : 'N/A'}</span></div>
+          <div>Email Service: <span style="color:${data.email==='ok'?'#8aff8a':'#ff4f4f'};font-weight:bold;">${data.email.toUpperCase()}</span></div>
+        `;
+      } catch (e) {
+        el.innerHTML = '<span style="color:#ff4f4f;">Could not fetch status.</span>';
+      }
+    }
+
+    function copyInviteCode(code) {
+      const el = document.createElement('textarea');
+      el.value = code;
+      document.body.appendChild(el);
+      el.select();
+      document.execCommand('copy');
+      document.body.removeChild(el);
+      // Floating feedback
+      const floatMsg = document.getElementById('copied-float-' + code);
+      if (floatMsg) {
+        floatMsg.style.display = 'block';
+        floatMsg.style.opacity = 1;
+        floatMsg.style.transform = 'translateY(-18px)';
+        setTimeout(() => {
+          floatMsg.style.opacity = 0;
+          floatMsg.style.transform = 'translateY(-32px)';
+        }, 700);
+        setTimeout(() => {
+          floatMsg.style.display = 'none';
+          floatMsg.style.opacity = 1;
+          floatMsg.style.transform = 'translateY(-18px)';
+        }, 1200);
+      }
+    }
+
+    fetchData();
+    startMatrix();
+    startGrid();
+    showTab('invites');
+  </script>
+</body>
+</html>

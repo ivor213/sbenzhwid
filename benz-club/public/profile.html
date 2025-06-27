@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Profile - $benz.club</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .profile-container {
+      background: #111;
+      border: 1.5px solid #fff;
+      border-radius: 10px;
+      /* No box-shadow by default */
+      width: 600px;
+      max-width: 800px;
+      margin: 80px auto 0 auto;
+      padding: 36px 64px 28px 64px;
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      font-family: 'Fira Mono', Consolas, 'Courier New', monospace;
+      animation: fadeIn 1s;
+      transition: transform .3s, box-shadow .3s;
+    }
+    .profile-container:hover {
+      transform: scale(1.03);
+      box-shadow: 0 0 40px rgba(255,255,255,0.4);
+    }
+    .profile-title {
+      color: #8aff8a;
+      font-size: 22px;
+      letter-spacing: 1.5px;
+      text-shadow: 0 0 8px #8aff8a, 0 0 2px #8aff8a;
+      margin-bottom: 18px;
+      font-family: 'Fira Mono', Consolas, 'Courier New', monospace;
+      text-transform: uppercase;
+      animation: fadeIn 1s;
+    }
+    .profile-status {
+      color: #8aff8a;
+      font-size: 15px;
+      margin-bottom: 18px;
+      text-shadow: 0 0 8px #8aff8a, 0 0 2px #8aff8a;
+      animation: fadeIn 1s;
+    }
+    .profile-info {
+      color: #fff;
+      font-size: 15px;
+      margin-bottom: 6px;
+      text-shadow: 0 0 8px #fff, 0 0 2px #fff;
+      animation: fadeIn 1s;
+    }
+    .profile-label {
+      color: #8aff8a;
+      font-size: 13px;
+      margin-right: 6px;
+      text-shadow: 0 0 8px #8aff8a, 0 0 2px #8aff8a;
+    }
+    .profile-form {
+      margin-top: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      align-items: center;
+      animation: fadeIn 1s;
+    }
+    .profile-input {
+      width: 100%;
+      max-width: 260px;
+      padding: 10px;
+      background: #000;
+      border: 1.5px solid #fff;
+      color: #fff;
+      font-family: inherit;
+      font-size: 15px;
+      border-radius: 6px;
+      box-shadow: 0 0 10px #fff2;
+      transition: box-shadow 0.3s, border 0.3s;
+      outline: none;
+      letter-spacing: 1px;
+    }
+    .profile-input:focus {
+      box-shadow: 0 0 16px #fff, 0 0 2px #fff;
+      border-color: #8aff8a;
+    }
+    .profile-btn {
+      width: 100%;
+      max-width: 180px;
+      background: transparent;
+      color: #8aff8a;
+      border: 1.5px solid #fff;
+      border-radius: 6px;
+      padding: 10px 0;
+      font-size: 15px;
+      font-family: 'Fira Mono', Consolas, 'Courier New', monospace;
+      font-weight: bold;
+      text-transform: uppercase;
+      cursor: pointer;
+      margin-top: 8px;
+      box-shadow: none;
+      letter-spacing: 1.5px;
+      transition: box-shadow 0.2s, background 0.2s, color 0.2s;
+      animation: fadeIn 1s;
+    }
+    .profile-btn:hover:enabled {
+      box-shadow: 0 0 8px #fff, 0 0 2px #fff;
+      background: #fff;
+      color: #181818;
+    }
+    .profile-message {
+      margin-top: 10px;
+      min-height: 20px;
+      font-size: 14px;
+      text-align: center;
+      color: #8aff8a;
+      text-shadow: 0 0 8px #8aff8a, 0 0 2px #8aff8a;
+      animation: fadeIn 1s;
+    }
+    .back-arrow {
+      position: fixed;
+      top: 18px;
+      left: 18px;
+      z-index: 10;
+      font-size: 28px;
+      cursor: pointer;
+      user-select: none;
+      text-shadow: 0 0 8px #fff, 0 0 16px #fff, 0 0 2px #fff;
+      color: #fff;
+      transition: text-shadow 0.2s;
+      animation: fadeIn 1s;
+    }
+    .back-arrow:hover {
+      text-shadow: 0 0 16px #8aff8a, 0 0 32px #fff, 0 0 4px #fff;
+      color: #8aff8a;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .profile-separator {
+      width: 90%;
+      height: 2px;
+      margin: 16px auto 16px auto;
+      background: rgba(255,255,255,0.13);
+      border-radius: 2px;
+      box-shadow: 0 0 8px #fff4;
+      backdrop-filter: blur(1.5px);
+    }
+  </style>
+</head>
+<body>
+  <div id="back-arrow" class="back-arrow">&larr;</div>
+  <canvas id="matrix-canvas"></canvas>
+  <canvas id="grid-canvas"></canvas>
+  <div class="crt-overlay"></div>
+  <div class="profile-container">
+    <div class="profile-title">Profile</div>
+    <div class="profile-info" style="font-size:18px;color:#8aff8a;text-shadow:0 0 8px #8aff8a,0 0 2px #8aff8a;margin-bottom:2px;">
+      <span id="profile-name"></span>
+    </div>
+    <div class="profile-separator"></div>
+    <div class="profile-info"><span class="profile-label">UID:</span><span id="profile-uid"></span></div>
+    <div class="profile-separator"></div>
+    <div id="profile-status" class="profile-status"></div>
+    <div class="profile-separator"></div>
+    <div class="profile-info"><span class="profile-label">Email:</span><span id="profile-email"></span></div>
+    <div class="profile-separator"></div>
+    <div class="profile-info"><span class="profile-label">Registered:</span><span id="profile-registered"></span></div>
+    <form class="profile-form" id="profile-form" autocomplete="off" onsubmit="return false;">
+      <input type="text" id="profile-username" class="profile-input" placeholder="Username" autocomplete="off" />
+      <input type="password" id="profile-current-password" class="profile-input" placeholder="Current Password" autocomplete="off" />
+      <input type="password" id="profile-password" class="profile-input" placeholder="New Password" autocomplete="new-password" />
+      <div id="profile-strength-msg" class="strength-msg"></div>
+      <button class="profile-btn" id="profile-save-btn">Save Changes</button>
+      <div class="profile-message" id="profile-message"></div>
+    </form>
+  </div>
+  <script src="script.js"></script>
+  <script>
+    document.getElementById('back-arrow').onclick = function() {
+      window.location.href = 'shop.html';
+    };
+    async function fetchProfile() {
+      try {
+        const res = await fetch('/api/profile');
+        if (!res.ok) throw new Error('Not logged in');
+        const data = await res.json();
+        document.getElementById('profile-username').value = data.username;
+        document.getElementById('profile-name').textContent = data.username;
+        document.getElementById('profile-status').textContent = data.isAdmin ? 'Admin' : 'Member';
+        document.getElementById('profile-status').style.color = '#8aff8a';
+        document.getElementById('profile-uid').textContent = data.userId || '';
+        document.getElementById('profile-email').textContent = data.email;
+        document.getElementById('profile-registered').textContent = data.registeredAt ? data.registeredAt.split('T')[0] : '';
+        window._originalProfileUsername = data.username;
+      } catch {
+        document.getElementById('profile-username').value = '';
+        document.getElementById('profile-name').textContent = '';
+        document.getElementById('profile-status').textContent = '';
+        document.getElementById('profile-uid').textContent = '';
+        document.getElementById('profile-email').textContent = '';
+        document.getElementById('profile-registered').textContent = '';
+        window._originalProfileUsername = '';
+      }
+    }
+    fetchProfile();
+    document.getElementById('profile-save-btn').onclick = async function() {
+      const username = document.getElementById('profile-username').value.trim();
+      const password = document.getElementById('profile-password').value.trim();
+      const currentPassword = document.getElementById('profile-current-password').value.trim();
+      const msg = document.getElementById('profile-message');
+      msg.textContent = '';
+      const originalUsername = window._originalProfileUsername || '';
+      if (username === originalUsername && !password) {
+        msg.textContent = 'No changes were made.';
+        msg.style.color = '#ff4f4f';
+        msg.style.textShadow = '0 0 8px #ff4f4f, 0 0 2px #ff4f4f';
+        return;
+      }
+      if (!username || username.length < 3 || /\s/.test(username)) {
+        msg.textContent = 'Username must be at least 3 characters and contain no spaces.';
+        msg.style.color = '#ff4f4f';
+        msg.style.textShadow = '0 0 8px #ff4f4f, 0 0 2px #ff4f4f';
+        return;
+      }
+      if (password && !currentPassword) {
+        msg.textContent = 'Enter your current password to change password.';
+        msg.style.color = '#ff4f4f';
+        msg.style.textShadow = '0 0 8px #ff4f4f, 0 0 2px #ff4f4f';
+        return;
+      }
+      if (password) {
+        const strengthMsg = document.getElementById('profile-strength-msg').textContent.toLowerCase();
+        if (strengthMsg === 'weak') {
+          msg.textContent = 'Password must be at least medium strength.';
+          msg.style.color = '#ff4f4f';
+          msg.style.textShadow = '0 0 8px #ff4f4f, 0 0 2px #ff4f4f';
+          return;
+        }
+      }
+      const payload = { username };
+      if (password) payload.password = password;
+      if (password) payload.currentPassword = currentPassword;
+      const res = await fetch('/api/profile', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (data.success) {
+        msg.textContent = 'Profile updated!';
+        msg.style.color = '#8aff8a';
+        msg.style.textShadow = '0 0 8px #8aff8a, 0 0 2px #8aff8a';
+        document.getElementById('profile-password').value = '';
+        document.getElementById('profile-current-password').value = '';
+      } else {
+        let errorMsg = data.message || 'Error updating profile.';
+        if (errorMsg === 'Current password is incorrect.') errorMsg = 'ACCESS DENIED: Incorrect password.';
+        msg.textContent = errorMsg;
+        msg.style.color = '#ff4f4f';
+        msg.style.textShadow = '0 0 8px #ff4f4f, 0 0 2px #ff4f4f';
+      }
+    };
+    function checkPasswordStrength(password) {
+      const msg = document.getElementById("profile-strength-msg");
+      let strength = 0;
+      if (password.length >= 8) strength++;
+      if (/[A-Z]/.test(password) && /[a-z]/.test(password)) strength++;
+      if (/[0-9]/.test(password)) strength++;
+      if (/[^A-Za-z0-9]/.test(password)) strength++;
+      if (!password) {
+        msg.textContent = "";
+        msg.className = "strength-msg";
+        return;
+      }
+      msg.textContent = strength <= 1 ? "Weak" : strength === 2 ? "Medium" : "Strong";
+      msg.className = `strength-msg ${strength <= 1 ? 'weak' : strength === 2 ? 'medium' : 'strong'}`;
+    }
+    document.getElementById("profile-password").addEventListener("input", function(e) {
+      checkPasswordStrength(e.target.value);
+    });
+  </script>
+</body>
+</html> 

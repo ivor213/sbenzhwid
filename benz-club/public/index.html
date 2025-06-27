@@ -1,0 +1,53 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>$benz.club Login</title>
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+  <canvas id="matrix-canvas"></canvas>
+  <canvas id="grid-canvas"></canvas>
+  <div class="crt-overlay"></div>
+
+  <div class="terminal-container" id="terminal">
+    <div id="back-arrow" class="back-arrow" onclick="toggleForm()">←</div>
+    <div id="form-wrapper">
+      <div class="logo-text" id="logo-text"></div>
+
+      <label class="terminal-label">> username:</label>
+      <input type="text" id="username" class="terminal-input" placeholder="username" />
+
+      <label class="terminal-label">> password:</label>
+      <div class="password-wrapper">
+        <input type="password" id="password" class="terminal-input" placeholder="password" />
+        <div class="toggle-password hide" onclick="togglePassword()">👁<div class="slash"></div></div>
+      </div>
+
+      <label class="terminal-label" id="email-label" style="display:none">> email:</label>
+      <input type="text" id="email" class="terminal-input" placeholder="email@example.com" style="display:none" />
+
+      <div class="invite-code" id="invite-container">
+        <input type="text" id="invite" class="terminal-input" placeholder="Invite Code" />
+      </div>
+
+      <div class="form-footer">
+        <label class="remember-box" id="remember-box">
+          <input type="checkbox" id="remember" /> Remember Me
+        </label>
+        <div id="strength-msg" class="strength-msg"></div>
+      </div>
+
+      <button class="btn" onclick="submitForm()">Submit</button>
+      <button class="btn" id="switch-btn" onclick="toggleForm()">Register</button>
+      <div class="message" id="message"></div>
+    </div>
+
+    <div id="loader" class="loader hidden"></div>
+  </div>
+
+  <script src="assets/js/script.js"></script>
+</body>
+</html>
