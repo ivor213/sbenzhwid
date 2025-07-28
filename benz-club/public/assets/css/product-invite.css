@@ -1,1 +1,266 @@
-/* Page-specific styles for product-invite.html */ 
+/* Page-specific styles for product-invite.html */
+
+/* Product Invite Page Styles */
+body { 
+  background: #0a0a0a; 
+}
+
+.product-main {
+  max-width: 340px;
+  margin: 120px auto 0 auto;
+  position: relative;
+  z-index: 2;
+}
+
+.product-box {
+  background: #111;
+  border: 1px solid #fff;
+  border-radius: 8px;
+  box-shadow: 0 0 20px rgba(255,255,255,0.1);
+  padding: 32px 18px 24px 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  position: relative;
+  transition: transform .3s, box-shadow .3s;
+}
+
+.product-box:hover {
+  transform: scale(1.03);
+  box-shadow: 0 0 40px rgba(255,255,255,0.4);
+}
+
+.product-title {
+  font-size: 32px;
+  color: #fff;
+  font-family: 'Monoton', monospace;
+  margin-bottom: 10px;
+  letter-spacing: 1px;
+  text-shadow: 0 0 8px #fff, 0 0 2px #fff;
+}
+
+.product-price {
+  color: #8aff8a;
+  font-family: 'Fira Mono', Consolas, 'Courier New', monospace;
+  font-size: 15px;
+  text-align: center;
+  margin: 8px 0 0 0;
+  letter-spacing: 1px;
+  text-shadow: 0 0 8px #8aff8a44, 0 0 2px #8aff8a;
+  user-select: none;
+}
+
+.product-desc {
+  font-size: 16px;
+  color: #aaa;
+  margin-bottom: 24px;
+  font-family: monospace;
+}
+
+.product-payment-label {
+  font-size: 15px;
+  color: #fff;
+  font-family: monospace;
+  margin-bottom: 6px;
+  font-weight: bold;
+}
+
+.product-payment-select {
+  width: 100%;
+  padding: 12px 10px;
+  border-radius: 8px;
+  border: 1px solid #fff;
+  background: #181818;
+  color: #fff;
+  font-size: 16px;
+  font-family: monospace;
+  margin-bottom: 22px;
+  outline: none;
+}
+
+.product-buy-btn {
+  width: 100%;
+  background: transparent;
+  color: #8aff8a;
+  border: 1.5px solid #fff;
+  border-radius: 6px;
+  padding: 10px 0;
+  font-size: 15px;
+  font-family: 'Fira Mono', Consolas, 'Courier New', monospace;
+  font-weight: bold;
+  text-transform: uppercase;
+  cursor: pointer;
+  margin-top: 8px;
+  box-shadow: none;
+  letter-spacing: 1.5px;
+  transition: box-shadow 0.2s, background 0.2s, color 0.2s;
+}
+
+.product-buy-btn:disabled {
+  background: #222;
+  color: #888;
+  cursor: not-allowed;
+}
+
+.product-buy-btn:hover:enabled {
+  box-shadow: 0 0 8px #fff, 0 0 2px #fff;
+  background: #fff;
+  color: #181818;
+}
+
+.back-arrow {
+  position: fixed;
+  top: 18px;
+  left: 18px;
+  z-index: 10;
+  font-size: 28px;
+  cursor: pointer;
+  user-select: none;
+  text-shadow: 0 0 8px #fff, 0 0 16px #fff, 0 0 2px #fff;
+}
+
+/* Product specific elements */
+.product-header {
+  font-family: 'Courier New', monospace;
+  font-size: 15px;
+  color: #fff;
+  margin-bottom: 6px;
+  text-align: center;
+  width: 100%;
+}
+
+.product-icon {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 12px;
+}
+
+.product-icon img {
+  height: 44px;
+  width: auto;
+  filter: invert(0.9) drop-shadow(0 0 2px #fff);
+}
+
+.required-field {
+  color: #ff4f4f;
+}
+
+.payment-section {
+  display: none;
+  margin-top: 18px;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.payment-section.crypto {
+  display: none;
+  margin-top: 18px;
+}
+
+.paypal-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.crypto-instructions {
+  margin-bottom: 10px;
+  font-size: 15px;
+  color: #8aff8a;
+}
+
+.crypto-select {
+  margin-bottom: 18px;
+  max-width: 100%;
+}
+
+.crypto-method {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  max-width: 100%;
+  word-break: break-all;
+}
+
+.crypto-address {
+  font-family: monospace;
+  font-size: 15px;
+  max-width: 100%;
+  overflow-wrap: break-word;
+  text-align: center;
+}
+
+.crypto-qr {
+  margin-top: 6px;
+  max-width: 100%;
+  height: auto;
+}
+
+.crypto-paid-btn {
+  margin-top: 18px;
+}
+
+.crypto-status {
+  margin-top: 10px;
+  font-size: 15px;
+}
+
+.invite-code-success {
+  margin-top: 18px;
+  font-size: 18px;
+  color: #8aff8a;
+  text-shadow: 0 0 8px #8aff8a, 0 0 2px #8aff8a;
+}
+
+.invite-code-box {
+  font-family: monospace;
+  font-size: 13px;
+  margin: 8px auto 12px auto;
+  padding: 3px 8px;
+  background: #181818;
+  border: 1.2px solid #8aff8a;
+  border-radius: 6px;
+  display: inline-block;
+  letter-spacing: 1px;
+  cursor: pointer;
+  position: relative;
+  text-align: center;
+}
+
+.copied-float {
+  display: none;
+  position: absolute;
+  left: 50%;
+  top: -22px;
+  transform: translateX(-50%);
+  font-size: 11px;
+  color: #8aff8a;
+  background: rgba(0,0,0,0.85);
+  padding: 1px 7px;
+  border-radius: 6px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s, transform 0.4s;
+  z-index: 10;
+  box-shadow: 0 2px 8px #0008;
+  font-family: monospace;
+  letter-spacing: 1px;
+}
+
+.invite-instructions {
+  color: #aaa;
+  font-size: 14px;
+}
+
+@media (max-width: 600px) {
+  .product-main { 
+    max-width: 98vw; 
+    padding: 0 4px; 
+  }
+  .product-box { 
+    padding: 22px 12px 18px 12px; 
+  }
+} 

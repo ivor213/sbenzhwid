@@ -538,3 +538,25 @@ input:-webkit-autofill:active {
   letter-spacing: 1px;
 }
 .admin-table td { position: relative; }
+
+.copy-btn {
+  margin-left: 10px;
+  padding: 2px 10px;
+  font-size: 13px;
+  border: 1px solid #8aff8a;
+  background: #181818;
+  color: #8aff8a;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.copy-btn:hover {
+  background: #8aff8a;
+  color: #181818;
+}
+.copied-float {
+  font-size: 13px;
+  color: #8aff8a;
+  margin-left: 8px;
+  transition: opacity 0.2s;
+}

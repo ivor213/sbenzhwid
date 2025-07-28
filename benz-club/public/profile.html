@@ -4,281 +4,441 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Profile - $benz.club</title>
-  <link rel="stylesheet" href="style.css" />
-  <style>
-    .profile-container {
-      background: #111;
-      border: 1.5px solid #fff;
-      border-radius: 10px;
-      /* No box-shadow by default */
-      width: 600px;
-      max-width: 800px;
-      margin: 80px auto 0 auto;
-      padding: 36px 64px 28px 64px;
-      position: relative;
-      z-index: 2;
-      text-align: center;
-      font-family: 'Fira Mono', Consolas, 'Courier New', monospace;
-      animation: fadeIn 1s;
-      transition: transform .3s, box-shadow .3s;
-    }
-    .profile-container:hover {
-      transform: scale(1.03);
-      box-shadow: 0 0 40px rgba(255,255,255,0.4);
-    }
-    .profile-title {
-      color: #8aff8a;
-      font-size: 22px;
-      letter-spacing: 1.5px;
-      text-shadow: 0 0 8px #8aff8a, 0 0 2px #8aff8a;
-      margin-bottom: 18px;
-      font-family: 'Fira Mono', Consolas, 'Courier New', monospace;
-      text-transform: uppercase;
-      animation: fadeIn 1s;
-    }
-    .profile-status {
-      color: #8aff8a;
-      font-size: 15px;
-      margin-bottom: 18px;
-      text-shadow: 0 0 8px #8aff8a, 0 0 2px #8aff8a;
-      animation: fadeIn 1s;
-    }
-    .profile-info {
-      color: #fff;
-      font-size: 15px;
-      margin-bottom: 6px;
-      text-shadow: 0 0 8px #fff, 0 0 2px #fff;
-      animation: fadeIn 1s;
-    }
-    .profile-label {
-      color: #8aff8a;
-      font-size: 13px;
-      margin-right: 6px;
-      text-shadow: 0 0 8px #8aff8a, 0 0 2px #8aff8a;
-    }
-    .profile-form {
-      margin-top: 18px;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-      align-items: center;
-      animation: fadeIn 1s;
-    }
-    .profile-input {
-      width: 100%;
-      max-width: 260px;
-      padding: 10px;
-      background: #000;
-      border: 1.5px solid #fff;
-      color: #fff;
-      font-family: inherit;
-      font-size: 15px;
-      border-radius: 6px;
-      box-shadow: 0 0 10px #fff2;
-      transition: box-shadow 0.3s, border 0.3s;
-      outline: none;
-      letter-spacing: 1px;
-    }
-    .profile-input:focus {
-      box-shadow: 0 0 16px #fff, 0 0 2px #fff;
-      border-color: #8aff8a;
-    }
-    .profile-btn {
-      width: 100%;
-      max-width: 180px;
-      background: transparent;
-      color: #8aff8a;
-      border: 1.5px solid #fff;
-      border-radius: 6px;
-      padding: 10px 0;
-      font-size: 15px;
-      font-family: 'Fira Mono', Consolas, 'Courier New', monospace;
-      font-weight: bold;
-      text-transform: uppercase;
-      cursor: pointer;
-      margin-top: 8px;
-      box-shadow: none;
-      letter-spacing: 1.5px;
-      transition: box-shadow 0.2s, background 0.2s, color 0.2s;
-      animation: fadeIn 1s;
-    }
-    .profile-btn:hover:enabled {
-      box-shadow: 0 0 8px #fff, 0 0 2px #fff;
-      background: #fff;
-      color: #181818;
-    }
-    .profile-message {
-      margin-top: 10px;
-      min-height: 20px;
-      font-size: 14px;
-      text-align: center;
-      color: #8aff8a;
-      text-shadow: 0 0 8px #8aff8a, 0 0 2px #8aff8a;
-      animation: fadeIn 1s;
-    }
-    .back-arrow {
-      position: fixed;
-      top: 18px;
-      left: 18px;
-      z-index: 10;
-      font-size: 28px;
-      cursor: pointer;
-      user-select: none;
-      text-shadow: 0 0 8px #fff, 0 0 16px #fff, 0 0 2px #fff;
-      color: #fff;
-      transition: text-shadow 0.2s;
-      animation: fadeIn 1s;
-    }
-    .back-arrow:hover {
-      text-shadow: 0 0 16px #8aff8a, 0 0 32px #fff, 0 0 4px #fff;
-      color: #8aff8a;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(-10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .profile-separator {
-      width: 90%;
-      height: 2px;
-      margin: 16px auto 16px auto;
-      background: rgba(255,255,255,0.13);
-      border-radius: 2px;
-      box-shadow: 0 0 8px #fff4;
-      backdrop-filter: blur(1.5px);
-    }
-  </style>
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <link rel="stylesheet" href="assets/css/profile.css" />
 </head>
 <body>
   <div id="back-arrow" class="back-arrow">&larr;</div>
   <canvas id="matrix-canvas"></canvas>
   <canvas id="grid-canvas"></canvas>
   <div class="crt-overlay"></div>
+  
   <div class="profile-container">
-    <div class="profile-title">Profile</div>
-    <div class="profile-info" style="font-size:18px;color:#8aff8a;text-shadow:0 0 8px #8aff8a,0 0 2px #8aff8a;margin-bottom:2px;">
-      <span id="profile-name"></span>
+    <div class="profile-header">
+      <div class="profile-avatar">
+        <div class="avatar-placeholder" id="avatar-placeholder"></div>
+      </div>
+      <div class="profile-title-section">
+        <h1 class="profile-title" id="profile-name">Loading...</h1>
+        <div class="profile-status" id="profile-status">Member</div>
+        <div class="profile-uid">UID: <span id="profile-uid">-</span></div>
+      </div>
     </div>
-    <div class="profile-separator"></div>
-    <div class="profile-info"><span class="profile-label">UID:</span><span id="profile-uid"></span></div>
-    <div class="profile-separator"></div>
-    <div id="profile-status" class="profile-status"></div>
-    <div class="profile-separator"></div>
-    <div class="profile-info"><span class="profile-label">Email:</span><span id="profile-email"></span></div>
-    <div class="profile-separator"></div>
-    <div class="profile-info"><span class="profile-label">Registered:</span><span id="profile-registered"></span></div>
-    <form class="profile-form" id="profile-form" autocomplete="off" onsubmit="return false;">
-      <input type="text" id="profile-username" class="profile-input" placeholder="Username" autocomplete="off" />
-      <input type="password" id="profile-current-password" class="profile-input" placeholder="Current Password" autocomplete="off" />
-      <input type="password" id="profile-password" class="profile-input" placeholder="New Password" autocomplete="new-password" />
-      <div id="profile-strength-msg" class="strength-msg"></div>
-      <button class="profile-btn" id="profile-save-btn">Save Changes</button>
-      <div class="profile-message" id="profile-message"></div>
-    </form>
+
+    <div class="profile-content">
+      <div class="profile-sidebar">
+        <nav class="profile-nav">
+          <button class="nav-tab active" data-tab="profile" onclick="switchTab('profile')">
+            Profile
+          </button>
+          <button class="nav-tab" data-tab="security" onclick="switchTab('security')">
+            Security
+          </button>
+          <button class="nav-tab" data-tab="activity" onclick="switchTab('activity')">
+            Activity
+          </button>
+          <button class="nav-tab" data-tab="account" onclick="switchTab('account')">
+            Account
+          </button>
+          <button class="nav-tab" data-tab="license-keys" onclick="switchTab('license-keys')">
+            License Keys
+          </button>
+          <button class="nav-tab" data-tab="invite-codes" onclick="switchTab('invite-codes')">
+            Invite Codes
+          </button>
+        </nav>
+      </div>
+
+      <div class="profile-main">
+        <!-- Profile Tab -->
+        <div class="tab-content active" id="profile-tab">
+          <h2>Profile Information</h2>
+          <div class="profile-section">
+            <div class="info-grid">
+              <div class="info-item">
+                <label>Username</label>
+                <div class="info-display" id="profile-username">-</div>
+              </div>
+              <div class="info-item">
+                <label>Email</label>
+                <div class="info-display" id="profile-email">-</div>
+              </div>
+              <div class="info-item">
+                <label>Registered</label>
+                <div class="info-display" id="profile-registered">-</div>
+              </div>
+              <div class="info-item">
+                <label>Last Login</label>
+                <div class="info-display" id="profile-last-login">-</div>
+              </div>
+            </div>
+            <div class="profile-message" id="profile-message"></div>
+          </div>
+        </div>
+
+        <!-- Security Tab -->
+        <div class="tab-content" id="security-tab">
+          <h2>Security Settings</h2>
+          <div class="profile-section">
+            <h3>Change Password</h3>
+            <div class="security-form">
+              <div class="form-group">
+                <label>Current Password</label>
+                <input type="password" id="security-current-password" class="profile-input" placeholder="Current Password" autocomplete="current-password" />
+              </div>
+              <div class="form-group">
+                <label>New Password</label>
+                <input type="password" id="security-new-password" class="profile-input" placeholder="New Password" autocomplete="new-password" />
+                <div id="security-strength-msg" class="strength-msg"></div>
+              </div>
+              <div class="form-group">
+                <label>Confirm New Password</label>
+                <input type="password" id="security-confirm-password" class="profile-input" placeholder="Confirm New Password" autocomplete="new-password" />
+              </div>
+              <button class="profile-btn" id="security-save-btn">Update Password</button>
+              <div class="profile-message" id="security-message"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Activity Tab -->
+        <div class="tab-content" id="activity-tab">
+          <h2>Recent Activity</h2>
+          <div class="profile-section">
+            <h3>Recent Actions</h3>
+            <div class="activity-list" id="activity-list">
+              <div class="activity-loading">Loading activities...</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Account Tab -->
+        <div class="tab-content" id="account-tab">
+          <h2>Account Information</h2>
+          <div class="profile-section">
+            <div class="account-info">
+              <div class="account-item">
+                <label>Account Status</label>
+                <div class="status-badge active" id="account-status">Active</div>
+              </div>
+              <div class="account-item">
+                <label>Member Since</label>
+                <div class="info-display" id="account-created">-</div>
+              </div>
+              <div class="account-item">
+                <label>Account Type</label>
+                <div class="info-display" id="account-type">-</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- License Keys Tab -->
+        <div class="tab-content" id="license-keys-tab">
+          <h2>Your License Keys</h2>
+          <div class="profile-section">
+            <div id="license-keys-list">Loading license keys...</div>
+          </div>
+        </div>
+
+        <!-- Invite Codes Tab -->
+        <div class="tab-content" id="invite-codes-tab">
+          <h2>Your Active Invite Codes</h2>
+          <div class="profile-section">
+            <div id="invite-codes-list">Loading invite codes...</div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
-  <script src="script.js"></script>
+
+  <script src="assets/js/script.js"></script>
   <script>
-    document.getElementById('back-arrow').onclick = function() {
-      window.location.href = 'shop.html';
-    };
+    // Tab switching functionality
+    function switchTab(tabName) {
+      // Hide all tab contents
+      document.querySelectorAll('.tab-content').forEach(tab => {
+        tab.classList.remove('active');
+      });
+      
+      // Remove active class from all nav tabs
+      document.querySelectorAll('.nav-tab').forEach(tab => {
+        tab.classList.remove('active');
+      });
+      
+      // Show selected tab content
+      document.getElementById(tabName + '-tab').classList.add('active');
+      
+      // Add active class to selected nav tab
+      document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+      
+      // Load activities if activity tab is selected
+      if (tabName === 'activity') {
+        fetchActivities();
+      }
+      if (tabName === 'license-keys') fetchLicenseKeys();
+      if (tabName === 'invite-codes') fetchInviteCodes();
+    }
+
+    // Fetch and display user activities
+    async function fetchActivities() {
+      const activityList = document.getElementById('activity-list');
+      
+      try {
+        const res = await fetch('/api/activities');
+        if (!res.ok) throw new Error('Failed to fetch activities');
+        const data = await res.json();
+        
+        if (data.activities && data.activities.length > 0) {
+          activityList.innerHTML = data.activities.map(activity => {
+            const timestamp = new Date(activity.timestamp);
+            const now = new Date();
+            const diffMs = now - timestamp;
+            const diffMins = Math.floor(diffMs / (1000 * 60));
+            const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+            const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+            
+            let timeText;
+            if (diffMins < 1) {
+              timeText = 'Just now';
+            } else if (diffMins < 60) {
+              timeText = `${diffMins} minute${diffMins > 1 ? 's' : ''} ago`;
+            } else if (diffHours < 24) {
+              timeText = `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
+            } else if (diffDays < 7) {
+              timeText = `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
+            } else {
+              timeText = timestamp.toLocaleDateString();
+            }
+            
+            // Get appropriate icon based on action
+            let icon = '📋';
+            if (activity.action === 'login') icon = '🔐';
+            else if (activity.action === 'password_change') icon = '🔑';
+            else if (activity.action === 'profile_update') icon = '👤';
+            
+            return `
+              <div class="activity-item">
+                <span class="activity-icon">${icon}</span>
+                <div class="activity-content">
+                  <div class="activity-title">${activity.description}</div>
+                  <div class="activity-time">${timeText}</div>
+                </div>
+              </div>
+            `;
+          }).join('');
+        } else {
+          activityList.innerHTML = '<div class="activity-empty">No activities found</div>';
+        }
+      } catch (error) {
+        console.error('Error fetching activities:', error);
+        activityList.innerHTML = '<div class="activity-error">Failed to load activities</div>';
+      }
+    }
+
+    // Profile data loading
     async function fetchProfile() {
       try {
         const res = await fetch('/api/profile');
         if (!res.ok) throw new Error('Not logged in');
         const data = await res.json();
-        document.getElementById('profile-username').value = data.username;
+        
+        // Update profile header
         document.getElementById('profile-name').textContent = data.username;
         document.getElementById('profile-status').textContent = data.isAdmin ? 'Admin' : 'Member';
-        document.getElementById('profile-status').style.color = '#8aff8a';
         document.getElementById('profile-uid').textContent = data.userId || '';
         document.getElementById('profile-email').textContent = data.email;
         document.getElementById('profile-registered').textContent = data.registeredAt ? data.registeredAt.split('T')[0] : '';
+        
+        // Update profile tab fields
+        document.getElementById('profile-username').textContent = data.username;
+        
+        // Update last login time
+        if (data.lastLogin) {
+          const lastLoginDate = new Date(data.lastLogin);
+          const now = new Date();
+          const diffMs = now - lastLoginDate;
+          const diffMins = Math.floor(diffMs / (1000 * 60));
+          const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+          const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+          
+          let lastLoginText;
+          if (diffMins < 1) {
+            lastLoginText = 'Just now';
+          } else if (diffMins < 60) {
+            lastLoginText = `${diffMins} minute${diffMins > 1 ? 's' : ''} ago`;
+          } else if (diffHours < 24) {
+            lastLoginText = `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
+          } else if (diffDays < 7) {
+            lastLoginText = `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
+          } else {
+            lastLoginText = lastLoginDate.toLocaleDateString();
+          }
+          document.getElementById('profile-last-login').textContent = lastLoginText;
+        } else {
+          document.getElementById('profile-last-login').textContent = 'Never';
+        }
+        
+        // Update account info
+        document.getElementById('account-created').textContent = data.registeredAt ? data.registeredAt.split('T')[0] : '';
+        document.getElementById('account-type').textContent = data.isAdmin ? 'Administrator' : 'Member';
+        document.getElementById('account-status').textContent = data.isAdmin ? 'Admin' : 'Active';
+        document.getElementById('account-status').className = data.isAdmin ? 'status-badge admin' : 'status-badge active';
+        
+        // Generate avatar placeholder
+        const avatar = document.getElementById('avatar-placeholder');
+        avatar.textContent = data.username.charAt(0).toUpperCase();
+        
         window._originalProfileUsername = data.username;
       } catch {
-        document.getElementById('profile-username').value = '';
-        document.getElementById('profile-name').textContent = '';
+        // Handle not logged in state
+        document.getElementById('profile-name').textContent = 'Not Logged In';
         document.getElementById('profile-status').textContent = '';
         document.getElementById('profile-uid').textContent = '';
         document.getElementById('profile-email').textContent = '';
         document.getElementById('profile-registered').textContent = '';
+        document.getElementById('profile-username').textContent = '';
+        document.getElementById('profile-last-login').textContent = '';
         window._originalProfileUsername = '';
       }
     }
-    fetchProfile();
-    document.getElementById('profile-save-btn').onclick = async function() {
-      const username = document.getElementById('profile-username').value.trim();
-      const password = document.getElementById('profile-password').value.trim();
-      const currentPassword = document.getElementById('profile-current-password').value.trim();
-      const msg = document.getElementById('profile-message');
+
+    // Event listeners
+    document.getElementById('back-arrow').onclick = function() {
+      window.location.href = 'shop.html';
+    };
+
+    // Password strength checker
+    function checkPasswordStrength(password) {
+      const msg = document.getElementById("security-strength-msg");
+      let strength = 0;
+      if (password.length >= 8) strength++;
+      if (/[A-Z]/.test(password) && /[a-z]/.test(password)) strength++;
+      if (/[0-9]/.test(password)) strength++;
+      if (/[^A-Za-z0-9]/.test(password)) strength++;
+      
+      if (!password) {
+        msg.textContent = "";
+        msg.className = "strength-msg";
+        return;
+      }
+      
+      msg.textContent = strength <= 1 ? "Weak" : strength === 2 ? "Medium" : "Strong";
+      msg.className = `strength-msg ${strength <= 1 ? 'weak' : strength === 2 ? 'medium' : 'strong'}`;
+    }
+
+    // Security password change
+    document.getElementById('security-new-password').addEventListener('input', function(e) {
+      checkPasswordStrength(e.target.value);
+    });
+
+    document.getElementById('security-save-btn').onclick = async function() {
+      const currentPassword = document.getElementById('security-current-password').value.trim();
+      const newPassword = document.getElementById('security-new-password').value.trim();
+      const confirmPassword = document.getElementById('security-confirm-password').value.trim();
+      const msg = document.getElementById('security-message');
       msg.textContent = '';
-      const originalUsername = window._originalProfileUsername || '';
-      if (username === originalUsername && !password) {
-        msg.textContent = 'No changes were made.';
+      msg.style.color = '';
+      msg.style.textShadow = '';
+      
+      if (!currentPassword || !newPassword || !confirmPassword) {
+        msg.textContent = 'Please fill in all password fields.';
         msg.style.color = '#ff4f4f';
         msg.style.textShadow = '0 0 8px #ff4f4f, 0 0 2px #ff4f4f';
         return;
       }
-      if (!username || username.length < 3 || /\s/.test(username)) {
-        msg.textContent = 'Username must be at least 3 characters and contain no spaces.';
+      
+      if (newPassword !== confirmPassword) {
+        msg.textContent = 'New passwords do not match.';
         msg.style.color = '#ff4f4f';
         msg.style.textShadow = '0 0 8px #ff4f4f, 0 0 2px #ff4f4f';
         return;
       }
-      if (password && !currentPassword) {
-        msg.textContent = 'Enter your current password to change password.';
+      
+      const strengthMsg = document.getElementById('security-strength-msg').textContent.toLowerCase();
+      if (strengthMsg === 'weak') {
+        msg.textContent = 'Password must be at least medium strength.';
         msg.style.color = '#ff4f4f';
         msg.style.textShadow = '0 0 8px #ff4f4f, 0 0 2px #ff4f4f';
         return;
       }
-      if (password) {
-        const strengthMsg = document.getElementById('profile-strength-msg').textContent.toLowerCase();
-        if (strengthMsg === 'weak') {
-          msg.textContent = 'Password must be at least medium strength.';
-          msg.style.color = '#ff4f4f';
-          msg.style.textShadow = '0 0 8px #ff4f4f, 0 0 2px #ff4f4f';
-          return;
-        }
-      }
-      const payload = { username };
-      if (password) payload.password = password;
-      if (password) payload.currentPassword = currentPassword;
+      
+      const payload = { password: newPassword, currentPassword };
       const res = await fetch('/api/profile', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       });
       const data = await res.json();
+      
       if (data.success) {
-        msg.textContent = 'Profile updated!';
+        msg.textContent = 'Password updated successfully!';
         msg.style.color = '#8aff8a';
         msg.style.textShadow = '0 0 8px #8aff8a, 0 0 2px #8aff8a';
-        document.getElementById('profile-password').value = '';
-        document.getElementById('profile-current-password').value = '';
+        document.getElementById('security-current-password').value = '';
+        document.getElementById('security-new-password').value = '';
+        document.getElementById('security-confirm-password').value = '';
+        document.getElementById('security-strength-msg').textContent = '';
       } else {
-        let errorMsg = data.message || 'Error updating profile.';
-        if (errorMsg === 'Current password is incorrect.') errorMsg = 'ACCESS DENIED: Incorrect password.';
-        msg.textContent = errorMsg;
+        msg.textContent = data.message || 'Error updating password.';
         msg.style.color = '#ff4f4f';
         msg.style.textShadow = '0 0 8px #ff4f4f, 0 0 2px #ff4f4f';
       }
     };
-    function checkPasswordStrength(password) {
-      const msg = document.getElementById("profile-strength-msg");
-      let strength = 0;
-      if (password.length >= 8) strength++;
-      if (/[A-Z]/.test(password) && /[a-z]/.test(password)) strength++;
-      if (/[0-9]/.test(password)) strength++;
-      if (/[^A-Za-z0-9]/.test(password)) strength++;
-      if (!password) {
-        msg.textContent = "";
-        msg.className = "strength-msg";
-        return;
+
+    // Fetch and display license keys
+    async function fetchLicenseKeys() {
+      const list = document.getElementById('license-keys-list');
+      list.innerHTML = 'Loading license keys...';
+      try {
+        const res = await fetch('/api/profile/license-keys');
+        const data = await res.json();
+        if (data.success && data.licenseKeys.length > 0) {
+          list.innerHTML = data.licenseKeys.map(k => `
+            <div class='license-key-item' data-key='${k.key}'>
+              <div><b>Key:</b> <span class='license-key-text'>${k.key}</span>
+                <button class='copy-btn' onclick="navigator.clipboard.writeText('${k.key}'); this.nextElementSibling.style.display='inline'; setTimeout(()=>this.nextElementSibling.style.display='none',1200)">Copy</button>
+                <span class='copied-float' style='display:none;'>Copied!</span>
+              </div>
+              <div><b>Product:</b> <span class='license-key-product'>${k.product || '-'}</span></div>
+              <div><b>Duration:</b> ${k.duration === '1m' ? '1 month' : k.duration === '1w' ? '1 week' : k.duration === '1d' ? '1 day' : k.duration}</div>
+              <div><b>Created:</b> ${new Date(k.createdAt).toLocaleDateString()}</div>
+              <div><b>Expires:</b> ${k.expiresAt ? new Date(k.expiresAt).toLocaleDateString() : '-'}</div>
+            </div>
+          `).join('');
+        } else {
+          list.innerHTML = '<div>No license keys found.</div>';
+        }
+      } catch (e) {
+        list.innerHTML = '<div>Error loading license keys.</div>';
       }
-      msg.textContent = strength <= 1 ? "Weak" : strength === 2 ? "Medium" : "Strong";
-      msg.className = `strength-msg ${strength <= 1 ? 'weak' : strength === 2 ? 'medium' : 'strong'}`;
     }
-    document.getElementById("profile-password").addEventListener("input", function(e) {
-      checkPasswordStrength(e.target.value);
-    });
+
+    // Fetch and display invite codes
+    async function fetchInviteCodes() {
+      const list = document.getElementById('invite-codes-list');
+      list.innerHTML = 'Loading invite codes...';
+      try {
+        const res = await fetch('/api/profile/invite-codes');
+        const data = await res.json();
+        if (data.success && data.inviteCodes.length > 0) {
+          list.innerHTML = data.inviteCodes.map(code => `
+            <div class='invite-code-item'>
+              <span class='invite-code-text'>${code}</span>
+              <button class='copy-btn' onclick="navigator.clipboard.writeText('${code}'); this.nextElementSibling.style.display='inline'; setTimeout(()=>this.nextElementSibling.style.display='none',1200)">Copy</button>
+              <span class='copied-float' style='display:none;margin-left:8px;color:#8aff8a;'>Copied!</span>
+            </div>
+          `).join('');
+        } else {
+          list.innerHTML = '<div>No active invite codes found.</div>';
+        }
+      } catch (e) {
+        list.innerHTML = '<div>Error loading invite codes.</div>';
+      }
+    }
+
+    // Initialize
+    fetchProfile();
   </script>
 </body>
 </html> 

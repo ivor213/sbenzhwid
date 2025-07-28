@@ -165,6 +165,7 @@
             ${!isAdmin
               ? `<button class=\"btn-small\" onclick=\"promoteAdmin(${u.userId})\">Make Admin</button>`
               : `<button class=\"btn-small danger\" onclick=\"demoteAdmin(${u.userId})\">Remove Admin</button>`}
+            <button class="btn-small" onclick="resetHWID(${u.userId}, '${u.username}')">Reset HWID</button>
           </td>
         `;
         userList.appendChild(tr);
@@ -413,11 +414,8 @@
           <div>Backend Uptime: <span>${Math.floor(data.backendUptime/3600)}h ${(Math.floor(data.backendUptime/60)%60)}m ${(data.backendUptime%60)}s</span></div>
           <div>DB Uptime: <span>${data.dbUptime !== null ? Math.floor(data.dbUptime/3600)+'h '+(Math.floor(data.dbUptime/60)%60)+'m '+(Math.floor(data.dbUptime%60))+'s' : 'N/A'}</span></div>
           <div>Memory: <span>${(data.memory.heapUsed/1024/1024).toFixed(1)} MB used / ${(data.memory.heapTotal/1024/1024).toFixed(1)} MB total</span></div>
-          <div>CPU Load: <span>${data.cpuLoad !== undefined ? data.cpuLoad.toFixed(2) : 'N/A'}</span></div>
           <div>Node.js Version: <span>${data.nodeVersion}</span></div>
           <div>MongoDB Version: <span>${data.mongoVersion}</span></div>
-          <div>Disk: <span>${data.disk ? `${data.disk.used} used / ${data.disk.size} total (${data.disk.avail} free, ${data.disk.use} used)` : 'N/A'}</span></div>
-          <div>Email Service: <span style="color:${data.email==='ok'?'#8aff8a':'#ff4f4f'};font-weight:bold;">${data.email.toUpperCase()}</span></div>
         `;
       } catch (e) {
         el.innerHTML = '<span style="color:#ff4f4f;">Could not fetch status.</span>';
@@ -447,6 +445,40 @@
           floatMsg.style.transform = 'translateY(-18px)';
         }, 1200);
       }
+    }
+
+    async function resetHWID(userId, username) {
+      showModal(`Reset HWID for all license keys of user \"${username}\"?`, async (confirmed) => {
+        if (!confirmed) return;
+        // Fetch all license keys for this user
+        const res = await fetch(`/api/profile/license-keys`, { credentials: 'include' });
+        const data = await res.json();
+        if (!data.success) {
+          alert('Failed to fetch license keys for this user.');
+          return;
+        }
+        const userKeys = data.licenseKeys.filter(k => Number(k.userId) === Number(userId));
+        if (userKeys.length === 0) {
+          alert('No license keys found for this user.');
+          return;
+        }
+        let allSuccess = true;
+        for (const key of userKeys) {
+          const resetRes = await fetch('/api/admin/reset-hwid', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ key: key.key })
+          });
+          const resetData = await resetRes.json();
+          if (!resetData.success) {
+            allSuccess = false;
+            alert(`Failed to reset HWID for key ${key.key}: ${resetData.message}`);
+          }
+        }
+        if (allSuccess) {
+          alert('HWID reset for all license keys of this user.');
+        }
+      });
     }
 
     fetchData();

@@ -6,173 +6,87 @@
   <title>Invite Code - Shop - $benz.club</title>
   <link rel="stylesheet" href="assets/css/style.css" />
   <link rel="stylesheet" href="assets/css/product-invite.css" />
-  <style>
-    body { background: #0a0a0a; }
-    .product-main {
-      max-width: 340px;
-      margin: 120px auto 0 auto;
-      position: relative;
-      z-index: 2;
-    }
-    .product-box {
-      background: #111;
-      border: 1px solid #fff;
-      border-radius: 8px;
-      box-shadow: 0 0 20px rgba(255,255,255,0.1);
-      padding: 32px 18px 24px 18px;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      position: relative;
-      transition: transform .3s, box-shadow .3s;
-    }
-    .product-box:hover {
-      transform: scale(1.03);
-      box-shadow: 0 0 40px rgba(255,255,255,0.4);
-    }
-    .product-title {
-      font-size: 32px;
-      color: #fff;
-      font-family: 'Monoton', monospace;
-      margin-bottom: 10px;
-      letter-spacing: 1px;
-      text-shadow: 0 0 8px #fff, 0 0 2px #fff;
-    }
-    .product-price {
-      color: #8aff8a;
-      font-family: 'Fira Mono', Consolas, 'Courier New', monospace;
-      font-size: 15px;
-      text-align: center;
-      margin: 8px 0 0 0;
-      letter-spacing: 1px;
-      text-shadow: 0 0 8px #8aff8a44, 0 0 2px #8aff8a;
-      user-select: none;
-    }
-    .product-desc {
-      font-size: 16px;
-      color: #aaa;
-      margin-bottom: 24px;
-      font-family: monospace;
-    }
-    .product-payment-label {
-      font-size: 15px;
-      color: #fff;
-      font-family: monospace;
-      margin-bottom: 6px;
-      font-weight: bold;
-    }
-    .product-payment-select {
-      width: 100%;
-      padding: 12px 10px;
-      border-radius: 8px;
-      border: 1px solid #fff;
-      background: #181818;
-      color: #fff;
-      font-size: 16px;
-      font-family: monospace;
-      margin-bottom: 22px;
-      outline: none;
-    }
-    .product-buy-btn {
-      width: 100%;
-      background: transparent;
-      color: #8aff8a;
-      border: 1.5px solid #fff;
-      border-radius: 6px;
-      padding: 10px 0;
-      font-size: 15px;
-      font-family: 'Fira Mono', Consolas, 'Courier New', monospace;
-      font-weight: bold;
-      text-transform: uppercase;
-      cursor: pointer;
-      margin-top: 8px;
-      box-shadow: none;
-      letter-spacing: 1.5px;
-      transition: box-shadow 0.2s, background 0.2s, color 0.2s;
-    }
-    .product-buy-btn:disabled {
-      background: #222;
-      color: #888;
-      cursor: not-allowed;
-    }
-    .product-buy-btn:hover:enabled {
-      box-shadow: 0 0 8px #fff, 0 0 2px #fff;
-      background: #fff;
-      color: #181818;
-    }
-    @media (max-width: 600px) {
-      .product-main { max-width: 98vw; padding: 0 4px; }
-      .product-box { padding: 22px 12px 18px 12px; }
-    }
-    .back-arrow {
-      text-shadow: 0 0 8px #fff, 0 0 16px #fff, 0 0 2px #fff;
-    }
-  </style>
 </head>
 <body>
-  <div id="back-arrow" class="back-arrow" style="position:fixed;top:18px;left:18px;z-index:10;font-size:28px;cursor:pointer;user-select:none;">&larr;</div>
+  <div id="back-arrow" class="back-arrow">&larr;</div>
   <canvas id="matrix-canvas"></canvas>
   <canvas id="grid-canvas"></canvas>
   <div class="crt-overlay"></div>
   <div class="product-main">
     <div class="product-box">
-      <div style="font-family:'Courier New',monospace;font-size:15px;color:#fff;margin-bottom:6px;text-align:center;width:100%;">Invite Code</div>
-      <div style="width:100%;display:flex;justify-content:center;margin-bottom:12px;">
-        <img src="https://img.icons8.com/ios/50/code--v1.png" alt="Key Icon" style="height:44px;width:auto;filter:invert(0.9) drop-shadow(0 0 2px #fff);" />
+      <div class="product-header">Invite Code</div>
+      <div class="product-icon">
+        <img src="https://img.icons8.com/ios/50/code--v1.png" alt="Key Icon" />
       </div>
       <div class="product-desc">Buy an invite code to give your friends access to $benz.club. Lifetime access, instant delivery after payment.</div>
       <div class="product-price">$1.99</div>
-      <div class="product-payment-label">Payment Method <span style="color:#ff4f4f;">*</span></div>
+      <div class="product-payment-label">Payment Method <span class="required-field">*</span></div>
       <select class="product-payment-select" id="payment-method-select">
         <option value="" disabled selected>Select Payment Method</option>
         <option value="paypal">PayPal</option>
         <option value="crypto">Cryptocurrency</option>
       </select>
-      <div id="payment-paypal" style="display:none;margin-top:18px;justify-content:center;align-items:center;width:100%;">
-        <div id="paypal-button-container" style="display:flex;justify-content:center;width:100%;"></div>
+      <div id="payment-paypal" class="payment-section">
+        <div id="paypal-button-container" class="paypal-container"></div>
       </div>
-      <div id="payment-crypto" style="display:none;margin-top:18px;">
-        <div style="margin-bottom:10px;font-size:15px;color:#8aff8a;">Select a cryptocurrency and send $1.99 worth:</div>
-        <select id="crypto-select" class="product-payment-select" style="margin-bottom:18px;max-width:100%;">
+      <div id="payment-crypto" class="payment-section crypto">
+        <div class="crypto-instructions">Select a cryptocurrency and send $1.99 worth:</div>
+        <select id="crypto-select" class="product-payment-select crypto-select">
           <option value="btc">Bitcoin (BTC)</option>
           <option value="bch">Bitcoin Cash (BCH)</option>
           <option value="doge">Dogecoin (DOGE)</option>
         </select>
-        <div id="crypto-btc" class="crypto-method" style="display:flex;flex-direction:column;align-items:center;gap:8px;max-width:100%;word-break:break-all;">
-          <div style="font-family:monospace;font-size:15px;max-width:100%;overflow-wrap:break-word;text-align:center;">bc1qkqwy50yvuls6r8ddz93424p0a8s0auaf508uzr</div>
-          <img src="https://api.qrserver.com/v1/create-qr-code/?size=90x90&data=bc1qkqwy50yvuls6r8ddz93424p0a8s0auaf508uzr" alt="BTC QR" style="margin-top:6px;max-width:100%;height:auto;" />
+        <div id="crypto-btc" class="crypto-method">
+          <div class="crypto-address">bc1qkqwy50yvuls6r8ddz93424p0a8s0auaf508uzr</div>
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=90x90&data=bc1qkqwy50yvuls6r8ddz93424p0a8s0auaf508uzr" alt="BTC QR" class="crypto-qr" />
         </div>
-        <div id="crypto-bch" class="crypto-method" style="display:none;flex-direction:column;align-items:center;gap:8px;max-width:100%;word-break:break-all;">
-          <div style="font-family:monospace;font-size:15px;max-width:100%;overflow-wrap:break-word;text-align:center;">bitcoincash:qptr9mp4e82g4elrn5xrgrjn6pgthj3fgsyp3glsm6</div>
-          <img src="https://api.qrserver.com/v1/create-qr-code/?size=90x90&data=bitcoincash:qptr9mp4e82g4elrn5xrgrjn6pgthj3fgsyp3glsm6" alt="BCH QR" style="margin-top:6px;max-width:100%;height:auto;" />
+        <div id="crypto-bch" class="crypto-method">
+          <div class="crypto-address">bitcoincash:qptr9mp4e82g4elrn5xrgrjn6pgthj3fgsyp3glsm6</div>
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=90x90&data=bitcoincash:qptr9mp4e82g4elrn5xrgrjn6pgthj3fgsyp3glsm6" alt="BCH QR" class="crypto-qr" />
         </div>
-        <div id="crypto-doge" class="crypto-method" style="display:none;flex-direction:column;align-items:center;gap:8px;max-width:100%;word-break:break-all;">
-          <div style="font-family:monospace;font-size:15px;max-width:100%;overflow-wrap:break-word;text-align:center;">DCCfcQDeGyNacdTHosTjnhBR54Lko3a2R8</div>
-          <img src="https://api.qrserver.com/v1/create-qr-code/?size=90x90&data=DCCfcQDeGyNacdTHosTjnhBR54Lko3a2R8" alt="DOGE QR" style="margin-top:6px;max-width:100%;height:auto;" />
+        <div id="crypto-doge" class="crypto-method">
+          <div class="crypto-address">DCCfcQDeGyNacdTHosTjnhBR54Lko3a2R8</div>
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=90x90&data=DCCfcQDeGyNacdTHosTjnhBR54Lko3a2R8" alt="DOGE QR" class="crypto-qr" />
         </div>
-        <button class="product-buy-btn" id="crypto-paid-btn" style="margin-top:18px;">Mark as Paid</button>
-        <div id="crypto-status-msg" style="margin-top:10px;font-size:15px;"></div>
+        <button class="product-buy-btn crypto-paid-btn" id="crypto-paid-btn">Mark as Paid</button>
+        <div id="crypto-status-msg" class="crypto-status"></div>
       </div>
       <button class="product-buy-btn" id="buy-now-btn" disabled>Buy Now</button>
       <div class="product-buy-message" id="product-buy-message"></div>
     </div>
   </div>
   <script src="assets/js/script.js"></script>
-  <script src="https://www.paypal.com/sdk/js?client-id=AacgR__n50novOL4xFR6cOPgj__FAP3q2Mz7s2JO9rRobqE3AfwwvuFmane7v0weJBHek0oSMssoU8jF&currency=USD"></script>
-  <script src="assets/js/product-invite.js"></script>
   <script>
-    const select = document.getElementById('payment-method-select');
-    const buyBtn = document.getElementById('buy-now-btn');
-    const msg = document.getElementById('product-buy-message');
-    const paypalDiv = document.getElementById('payment-paypal');
-    const cryptoDiv = document.getElementById('payment-crypto');
-    select.addEventListener('change', function() {
-      paypalDiv.style.display = select.value === 'paypal' ? 'flex' : 'none';
-      cryptoDiv.style.display = select.value === 'crypto' ? '' : 'none';
-      buyBtn.style.display = 'none';
-    });
-    // PayPal Button
-    if (window.paypal) {
+    // Load PayPal client ID from server
+    let paypalClientId = null;
+    
+    async function loadPayPalConfig() {
+      try {
+        const response = await fetch('/api/paypal/config');
+        const config = await response.json();
+        if (config.success && config.clientId) {
+          paypalClientId = config.clientId;
+          loadPayPalSDK();
+        }
+      } catch (error) {
+        console.error('Failed to load PayPal configuration:', error);
+      }
+    }
+    
+    function loadPayPalSDK() {
+      if (!paypalClientId) return;
+      
+      const script = document.createElement('script');
+      script.src = `https://www.paypal.com/sdk/js?client-id=${paypalClientId}&currency=USD`;
+      script.onload = function() {
+        initializePayPal();
+      };
+      document.head.appendChild(script);
+    }
+    
+    function initializePayPal() {
+      if (!window.paypal) return;
+      
       paypal.Buttons({
         createOrder: function(data, actions) {
           return actions.order.create({
@@ -198,12 +112,25 @@
               }
             });
           });
-        },
-        onError: function(err) {
-          msg.textContent = 'Payment error. Please try again.';
         }
       }).render('#paypal-button-container');
     }
+    
+    // Load configuration when page loads
+    loadPayPalConfig();
+  </script>
+  <script src="assets/js/product-invite.js"></script>
+  <script>
+    const select = document.getElementById('payment-method-select');
+    const buyBtn = document.getElementById('buy-now-btn');
+    const msg = document.getElementById('product-buy-message');
+    const paypalDiv = document.getElementById('payment-paypal');
+    const cryptoDiv = document.getElementById('payment-crypto');
+    select.addEventListener('change', function() {
+      paypalDiv.style.display = select.value === 'paypal' ? 'flex' : 'none';
+      cryptoDiv.style.display = select.value === 'crypto' ? '' : 'none';
+      buyBtn.style.display = 'none';
+    });
     // Crypto Mark as Paid
     document.getElementById('crypto-paid-btn').onclick = function() {
       const method = cryptoSelect.value;
@@ -250,36 +177,36 @@
     // Helper: Show invite code after payment
     function showInviteCode(inviteCode) {
       msg.innerHTML = `
-        <div style='margin-top:18px;font-size:18px;color:#8aff8a;text-shadow:0 0 8px #8aff8a,0 0 2px #8aff8a;'>Your Invite Code:</div>
-        <div id='invite-code-box' style='font-family:monospace;font-size:13px;margin:8px auto 12px auto;padding:3px 8px;background:#181818;border:1.2px solid #8aff8a;border-radius:6px;display:inline-block;letter-spacing:1px;cursor:pointer;position:relative;text-align:center;'>
+        <div class="invite-code-success">Your Invite Code:</div>
+        <div id='invite-code-box' class="invite-code-box">
           <span id='invite-code-text'>${inviteCode}</span>
-          <span id='copied-float' style='display:none;position:absolute;left:50%;top:-22px;transform:translateX(-50%);font-size:11px;color:#8aff8a;background:rgba(0,0,0,0.85);padding:1px 7px;border-radius:6px;pointer-events:none;opacity:0;transition:opacity 0.4s, transform 0.4s;z-index:10;box-shadow:0 2px 8px #0008;font-family:monospace;letter-spacing:1px;'>Copied!</span>
+          <span id='copied-float' class="copied-float">Copied!</span>
         </div>
-        <div style='color:#aaa;font-size:14px;'>Click the code to copy. This code is single-use.</div>
+        <div class="invite-instructions">Click the code to copy. This code is single-use.</div>
       `;
-      const codeBox = document.getElementById('invite-code-box');
-      const codeText = document.getElementById('invite-code-text');
-      const copiedFloat = document.getElementById('copied-float');
-      codeBox.onclick = function() {
-        // Copy to clipboard
+      
+      // Add click to copy functionality
+      document.getElementById('invite-code-box').onclick = function() {
         const el = document.createElement('textarea');
-        el.value = codeText.textContent;
+        el.value = inviteCode;
         document.body.appendChild(el);
         el.select();
         document.execCommand('copy');
         document.body.removeChild(el);
-        // Show floating feedback
-        copiedFloat.style.display = 'block';
-        copiedFloat.style.opacity = 1;
-        copiedFloat.style.transform = 'translateX(-50%) translateY(-8px)';
+        
+        // Show copied feedback
+        const floatMsg = document.getElementById('copied-float');
+        floatMsg.style.display = 'block';
+        floatMsg.style.opacity = 1;
+        floatMsg.style.transform = 'translateY(-18px)';
         setTimeout(() => {
-          copiedFloat.style.opacity = 0;
-          copiedFloat.style.transform = 'translateX(-50%) translateY(-22px)';
+          floatMsg.style.opacity = 0;
+          floatMsg.style.transform = 'translateY(-32px)';
         }, 700);
         setTimeout(() => {
-          copiedFloat.style.display = 'none';
-          copiedFloat.style.opacity = 1;
-          copiedFloat.style.transform = 'translateX(-50%) translateY(-8px)';
+          floatMsg.style.display = 'none';
+          floatMsg.style.opacity = 1;
+          floatMsg.style.transform = 'translateY(-18px)';
         }, 1200);
       };
     }
