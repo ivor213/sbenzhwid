@@ -6,6 +6,77 @@
   <title>Admin Panel</title>
   <link rel="stylesheet" href="assets/css/style.css" />
   <link rel="stylesheet" href="assets/css/admin.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    /* Order status badges */
+    .status-badge {
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+    
+    .status-badge.pending {
+      background: #ffd700;
+      color: #000;
+    }
+    
+    .status-badge.processing {
+      background: #87ceeb;
+      color: #000;
+    }
+    
+    .status-badge.shipped {
+      background: #32cd32;
+      color: #fff;
+    }
+    
+    .status-badge.delivered {
+      background: #228b22;
+      color: #fff;
+    }
+    
+    .status-badge.cancelled {
+      background: #ff6347;
+      color: #fff;
+    }
+    
+    /* Order controls */
+    .order-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    /* Pagination */
+    .pagination {
+      margin-top: 20px;
+      text-align: center;
+    }
+    
+    .pagination button {
+      margin: 0 5px;
+    }
+    
+    /* Order modal */
+    #order-modal .modal-box {
+      max-width: 600px;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+    
+    #order-modal h4 {
+      color: #8aff8a;
+      margin-bottom: 10px;
+      border-bottom: 1px solid #333;
+      padding-bottom: 5px;
+    }
+    
+    #order-modal p {
+      margin: 5px 0;
+    }
+  </style>
 </head>
 <body>
   <canvas id="matrix-canvas"></canvas>
@@ -19,6 +90,7 @@
     <div class="admin-tabs">
       <button class="tab-btn active" id="tab-invites" onclick="showTab('invites')">Invites</button>
       <button class="tab-btn" id="tab-users" onclick="showTab('users')">Users</button>
+      <button class="tab-btn" id="tab-orders" onclick="window.location.href='/orders.html'">Orders</button>
       <button class="tab-btn" id="tab-banned" onclick="showTab('banned')">Banned</button>
       <button class="tab-btn" id="tab-status" onclick="showTab('status')">Server Status</button>
     </div>
@@ -80,7 +152,7 @@
 
   <script src="assets/js/admin.js"></script>
   <script>
-    const logoText = "$BENZ.CLUB";
+    const logoText = "SUPREMACY.CLUB";
     const logoEl = document.getElementById("logo-text");
     [...logoText].forEach((ch, i) => {
       const span = document.createElement("span");
@@ -384,6 +456,7 @@
     }
 
     function showTab(tab) {
+      console.log('DEBUG: showTab called with tab:', tab);
       document.getElementById('section-invites').style.display = tab === 'invites' ? '' : 'none';
       document.getElementById('section-users').style.display = tab === 'users' ? '' : 'none';
       document.getElementById('section-banned').style.display = tab === 'banned' ? '' : 'none';
@@ -398,6 +471,10 @@
       } else if (statusInterval) {
         clearInterval(statusInterval);
         statusInterval = null;
+      }
+      if (tab === 'orders') {
+        console.log('DEBUG: Orders tab selected, calling fetchOrders()');
+        // fetchOrders(); // This function is now in orders.html
       }
     }
 
@@ -482,9 +559,10 @@
     }
 
     fetchData();
-    startMatrix();
     startGrid();
     showTab('invites');
   </script>
+
+  
 </body>
 </html>

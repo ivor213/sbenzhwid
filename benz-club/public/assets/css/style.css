@@ -79,11 +79,13 @@ body {
 }
 
 .logo-text {
-  font-family: 'Monoton', monospace;
-  font-size: 40px;
+  font-family: 'Courier New', monospace;
+  font-size: 28px;
   text-align: center;
   margin-bottom: 20px;
-  letter-spacing: 2px;
+  letter-spacing: 1px;
+  font-weight: bold;
+  text-shadow: 0 0 4px #fff, 0 0 1px #fff;
 }
 .logo-text span {
   opacity: 0;
@@ -125,6 +127,8 @@ input:focus { outline:none; }
 
 .invite-code { display:none; transition:all .3s; }
 .invite-code.visible { display:block; }
+
+
 
 .remember-box {
   display:flex; align-items:center;
@@ -560,3 +564,48 @@ input:-webkit-autofill:active {
   margin-left: 8px;
   transition: opacity 0.2s;
 }
+
+/* Cart spam protection notifications */
+.notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 12px 20px;
+  border-radius: 6px;
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+  z-index: 10000;
+  transform: translateX(100%);
+  transition: transform 0.3s ease;
+  max-width: 300px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.notification.show {
+  transform: translateX(0);
+}
+
+.notification.success {
+  background: #00ff00;
+  color: #000;
+  border-left: 4px solid #00aa00;
+}
+
+.notification.error {
+  background: #ff4444;
+  border-left: 4px solid #cc0000;
+}
+
+.notification.warning {
+  background: #ffaa00;
+  color: #000;
+  border-left: 4px solid #cc8800;
+}
+
+.notification.info {
+  background: #0088ff;
+  border-left: 4px solid #0066cc;
+}
+
+

@@ -8,7 +8,7 @@ A web application for the Sbenz Club with user authentication, admin panel, and 
 - Admin dashboard for user management
 - Invite code system
 - Profile management
-- Payment integration (PayPal and Crypto)
+- Payment integration (2Checkout and Crypto)
 - Responsive design
 
 ## Prerequisites
@@ -77,7 +77,7 @@ sbenz-club-website/
 - **Frontend:** HTML, CSS, JavaScript
 - **Authentication:** JWT, bcrypt
 - **Database:** MongoDB with Mongoose
-- **Payment:** PayPal API, Crypto payments
+- **Payment:** 2Checkout API, Crypto payments
 
 ## Contributing
 

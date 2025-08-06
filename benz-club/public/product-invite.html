@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Invite Code - Shop - $benz.club</title>
+  <title>Invite Code - Shop - supremacy.club</title>
   <link rel="stylesheet" href="assets/css/style.css" />
   <link rel="stylesheet" href="assets/css/product-invite.css" />
 </head>
@@ -18,17 +18,13 @@
       <div class="product-icon">
         <img src="https://img.icons8.com/ios/50/code--v1.png" alt="Key Icon" />
       </div>
-      <div class="product-desc">Buy an invite code to give your friends access to $benz.club. Lifetime access, instant delivery after payment.</div>
+      <div class="product-desc">Buy an invite code to give your friends access to supremacy.club. Lifetime access, instant delivery after payment.</div>
       <div class="product-price">$1.99</div>
       <div class="product-payment-label">Payment Method <span class="required-field">*</span></div>
       <select class="product-payment-select" id="payment-method-select">
         <option value="" disabled selected>Select Payment Method</option>
-        <option value="paypal">PayPal</option>
         <option value="crypto">Cryptocurrency</option>
       </select>
-      <div id="payment-paypal" class="payment-section">
-        <div id="paypal-button-container" class="paypal-container"></div>
-      </div>
       <div id="payment-crypto" class="payment-section crypto">
         <div class="crypto-instructions">Select a cryptocurrency and send $1.99 worth:</div>
         <select id="crypto-select" class="product-payment-select crypto-select">
@@ -56,78 +52,14 @@
     </div>
   </div>
   <script src="assets/js/script.js"></script>
-  <script>
-    // Load PayPal client ID from server
-    let paypalClientId = null;
-    
-    async function loadPayPalConfig() {
-      try {
-        const response = await fetch('/api/paypal/config');
-        const config = await response.json();
-        if (config.success && config.clientId) {
-          paypalClientId = config.clientId;
-          loadPayPalSDK();
-        }
-      } catch (error) {
-        console.error('Failed to load PayPal configuration:', error);
-      }
-    }
-    
-    function loadPayPalSDK() {
-      if (!paypalClientId) return;
-      
-      const script = document.createElement('script');
-      script.src = `https://www.paypal.com/sdk/js?client-id=${paypalClientId}&currency=USD`;
-      script.onload = function() {
-        initializePayPal();
-      };
-      document.head.appendChild(script);
-    }
-    
-    function initializePayPal() {
-      if (!window.paypal) return;
-      
-      paypal.Buttons({
-        createOrder: function(data, actions) {
-          return actions.order.create({
-            purchase_units: [{ amount: { value: '1.99' }, description: 'Invite Code' }],
-            payee: { email_address: 'adingreyling@gmail.com' }
-          });
-        },
-        onApprove: function(data, actions) {
-          return actions.order.capture().then(function(details) {
-            msg.textContent = 'Payment successful! Generating invite code...';
-            // Call backend to deliver invite code
-            fetch('/api/paypal/confirm', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ orderID: details.id, email: details.payer.email_address })
-            })
-            .then(res => res.json())
-            .then(data => {
-              if (data.success && data.inviteCode) {
-                showInviteCode(data.inviteCode);
-              } else {
-                msg.textContent = data.message || 'Error delivering invite code.';
-              }
-            });
-          });
-        }
-      }).render('#paypal-button-container');
-    }
-    
-    // Load configuration when page loads
-    loadPayPalConfig();
-  </script>
+
   <script src="assets/js/product-invite.js"></script>
   <script>
     const select = document.getElementById('payment-method-select');
     const buyBtn = document.getElementById('buy-now-btn');
     const msg = document.getElementById('product-buy-message');
-    const paypalDiv = document.getElementById('payment-paypal');
     const cryptoDiv = document.getElementById('payment-crypto');
     select.addEventListener('change', function() {
-      paypalDiv.style.display = select.value === 'paypal' ? 'flex' : 'none';
       cryptoDiv.style.display = select.value === 'crypto' ? '' : 'none';
       buyBtn.style.display = 'none';
     });
@@ -211,5 +143,6 @@
       };
     }
   </script>
+  
 </body>
 </html> 

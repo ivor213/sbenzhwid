@@ -1,2 +1,0 @@
-C:\Users\ading\Desktop\sbenz-club-website\sbenz-loader\sbenz-loader\bin\Release\net8.0-windows\win-x64\publish\sbenz-loader.pdb
-C:\Users\ading\Desktop\sbenz-club-website\sbenz-loader\sbenz-loader\bin\Release\net8.0-windows\win-x64\publish\sbenz-loader.exe

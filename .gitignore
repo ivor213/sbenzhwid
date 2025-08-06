@@ -150,4 +150,18 @@ Thumbs.db
 users.txt
 invites.txt
 *.db
-*.sqlite 
+*.sqlite
+
+# Environment and config files
+*.env.*
+
+# .NET/C# files (sbenz-loader)
+sbenz-loader/.vs/
+sbenz-loader/**/bin/
+sbenz-loader/**/obj/
+*.user
+*.suo
+*.vsidx
+
+# Development files
+test-cart.html 

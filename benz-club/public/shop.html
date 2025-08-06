@@ -3,180 +3,1528 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Shop - $benz.club</title>
-  <link rel="stylesheet" href="assets/css/style.css" />
-  <link rel="stylesheet" href="assets/css/shop.css" />
+  <title>Shop - supremacy.club</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <style>
+    /* Modern Minimalist Theme */
     body {
       background: #0a0a0a;
+      color: #ffffff;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
       margin: 0;
-      min-height: 100vh;
-      overflow-y: auto;
-      font-family: 'Courier New', monospace;
-      color: #fff;
       padding: 0;
-      /* Remove flex centering for shop page */
-      display: block !important;
-    }
-    .shop-main {
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 0 24px;
+      overflow-x: hidden;
       position: relative;
-      z-index: 2;
+      line-height: 1.6;
     }
-    .shop-title {
-      font-size: 64px;
-      color: #fff;
-      font-family: 'Monoton', monospace;
-      font-weight: bold;
-      margin-bottom: 38px;
-      margin-top: 0;
-      letter-spacing: 2px;
-      text-shadow: 0 0 4px #fff, 0 0 1px #fff;
-      text-align: center;
-      display: inline-block;
-      min-height: 80px;
-    }
-    .shop-grid {
+    
+    /* Navigation Bar */
+    .navbar {
+      background: rgba(10, 10, 10, 0.95);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 1rem 2rem;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
       display: flex;
-      flex-direction: row;
-      justify-content: flex-start;
-      align-items: flex-start;
-      gap: 32px;
-      margin-top: 32px;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.3s ease;
     }
-    .shop-card {
-      background: #111;
-      border-radius: 8px;
-      box-shadow: 0 0 20px rgba(255,255,255,0.1);
-      border: 1px solid #fff;
-      padding: 32px 24px 24px 24px;
+    
+    .navbar.scrolled {
+      background: rgba(10, 10, 10, 0.98);
+      backdrop-filter: blur(30px);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+    
+    .navbar.hidden {
+      transform: translateY(-100%);
+    }
+    
+    .nav-brand a {
+      color: #ffffff;
+      text-decoration: none;
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+    
+    .nav-subtitle {
+      color: #888888;
+      font-size: 0.75rem;
+      font-weight: 400;
+      margin-top: 0.25rem;
+      opacity: 0;
+      transform: translateY(10px);
+      animation: fadeInUp 1.5s ease-out 0.5s forwards;
+    }
+    
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    @keyframes typewriter {
+      from {
+        width: 0;
+      }
+      to {
+        width: 100%;
+      }
+    }
+    
+    @keyframes blink {
+      0%, 50% {
+        border-color: transparent;
+      }
+      51%, 100% {
+        border-color: #22c55e;
+      }
+    }
+    
+    .nav-menu {
       display: flex;
-      flex-direction: column;
-      align-items: flex-start;
+      align-items: center;
+      gap: 1.5rem;
+    }
+    
+    .nav-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #ffffff;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+    
+    .nav-btn:hover {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.3);
+      transform: translateY(-1px);
+    }
+    
+    /* Cart Icon */
+    .cart-container {
       position: relative;
-      min-width: 220px;
-      min-height: 160px;
-      max-width: 260px;
+    }
+    
+    .cart-icon {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #ffffff;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
       cursor: pointer;
-      transition: transform .3s, box-shadow .3s;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.875rem;
+      font-weight: 500;
     }
+    
+    .cart-icon:hover {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.3);
+      transform: translateY(-1px);
+    }
+    
+    .cart-icon svg {
+      width: 16px;
+      height: 16px;
+    }
+    
+    #cart-count {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background: #ff4757;
+      color: white;
+      font-size: 11px;
+      font-weight: 700;
+      min-width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid #000000;
+      box-shadow: 0 2px 8px rgba(255, 71, 87, 0.4);
+      text-align: center;
+      line-height: 18px;
+      padding: 0;
+      margin: 0;
+    }
+    
+    /* Cart Dropdown */
+    .cart-dropdown {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      width: 350px;
+      background: rgba(10, 10, 10, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-10px);
+      transition: all 0.3s;
+      margin-top: 10px;
+      backdrop-filter: blur(20px);
+    }
+    
+    .cart-dropdown.show {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+    
+    .cart-dropdown::before {
+      content: '';
+      position: absolute;
+      top: -6px;
+      right: 20px;
+      width: 12px;
+      height: 12px;
+      background: #0a0a0a;
+      border-left: 1px solid rgba(255, 255, 255, 0.1);
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      transform: rotate(45deg);
+    }
+    
+    .cart-items {
+      padding: 1rem;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+    
+    .cart-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .cart-item:last-child {
+      border-bottom: none;
+    }
+    
+    .cart-item-image {
+      width: 40px;
+      height: 40px;
+      border-radius: 4px;
+      object-fit: cover;
+    }
+    
+    .cart-item-details {
+      flex: 1;
+    }
+    
+    .cart-item-name {
+      color: #ffffff;
+      font-size: 0.875rem;
+      font-weight: 500;
+      margin-bottom: 0.25rem;
+    }
+    
+    .cart-item-price {
+      color: #22c55e;
+      font-size: 0.875rem;
+      font-weight: 600;
+    }
+    
+    .cart-item-quantity {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+    
+    .quantity-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #ffffff;
+      width: 24px;
+      height: 24px;
+      border-radius: 4px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      transition: all 0.2s ease;
+    }
+    
+    .quantity-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+    
+    .remove-item {
+      background: rgba(220, 38, 38, 0.1);
+      border: 1px solid rgba(220, 38, 38, 0.2);
+      color: #dc2626;
+      width: 24px;
+      height: 24px;
+      border-radius: 4px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.875rem;
+      transition: all 0.2s ease;
+    }
+    
+    .remove-item:hover {
+      background: rgba(220, 38, 38, 0.2);
+      border-color: rgba(220, 38, 38, 0.3);
+    }
+    
+    .empty-cart {
+      color: #888888;
+      text-align: center;
+      padding: 2rem;
+      font-size: 0.875rem;
+    }
+    
+    .empty-cart p {
+      margin: 0 0 0.5rem 0;
+      color: #888888;
+    }
+    
+    .empty-cart p:first-child {
+      color: #ffffff;
+      font-weight: 500;
+      font-size: 1rem;
+    }
+    
+    .empty-cart-btn {
+      background: #22c55e;
+      color: #000000;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 6px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      display: inline-block;
+      margin-top: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .empty-cart-btn:hover {
+      background: #16a34a;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+    }
+    
+    .cart-total {
+      padding: 1rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #ffffff;
+      font-weight: 600;
+    }
+    
+    .checkout-btn {
+      background: #22c55e;
+      color: #000000;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 6px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      width: 100%;
+      margin-top: 0.5rem;
+    }
+    
+    .checkout-btn:hover {
+      background: #16a34a;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+    }
+    
+    /* Hero Slideshow */
+    .hero-slideshow {
+      margin-top: 80px;
+      height: 600px;
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .slideshow-container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+    
+    .slide {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      transition: opacity 0.8s ease-in-out;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .slide.active {
+      opacity: 1;
+    }
+    
+    .slide-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 4rem;
+    }
+    
+    .slide-image {
+      flex: 1;
+      max-width: 500px;
+      height: 400px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .slide-image img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      border-radius: 12px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    }
+    
+    .slide-text {
+      flex: 1;
+      color: #ffffff;
+    }
+    
+    .slide-text h2 {
+      font-size: 3rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      line-height: 1.2;
+      letter-spacing: -1px;
+    }
+    
+    .slide-text p {
+      font-size: 1.125rem;
+      color: #cccccc;
+      margin-bottom: 2rem;
+      line-height: 1.6;
+    }
+    
+    .slide-price {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #22c55e;
+      margin-bottom: 2rem;
+    }
+    
+    .slide-btn {
+      background: #22c55e;
+      color: #000000;
+      border: none;
+      padding: 1rem 2rem;
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+    }
+    
+    .slide-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      transition: left 0.5s ease;
+      z-index: -1;
+    }
+    
+    .slide-btn:hover::before {
+      left: 100%;
+    }
+    
+    .slide-btn:hover {
+      background: #16a34a;
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 15px 30px rgba(34, 197, 94, 0.4);
+    }
+    
+    .slide-btn:active {
+      transform: translateY(-1px) scale(1.02);
+      box-shadow: 0 8px 15px rgba(34, 197, 94, 0.3);
+      transition: all 0.1s ease;
+    }
+    
+
+    
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    
+    /* Slideshow Navigation */
+    .slideshow-nav {
+      position: absolute;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 0.75rem;
+    }
+    
+    .nav-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.3);
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    .nav-dot.active {
+      background: #22c55e;
+      box-shadow: 0 0 10px rgba(34, 197, 94, 0.5);
+    }
+    
+    .nav-dot:hover {
+      background: rgba(34, 197, 94, 0.5);
+    }
+    
+    /* Slideshow Controls */
+    .slideshow-control {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0, 0, 0, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #ffffff;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      font-weight: 300;
+      transition: all 0.2s ease;
+    }
+    
+    .slideshow-control:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.4);
+    }
+    
+    .slideshow-control.prev {
+      left: 2rem;
+    }
+    
+    .slideshow-control.next {
+      right: 2rem;
+    }
+    
+    /* Main Content */
+    .shop-main {
+      padding: 3rem 2rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    
+    .section-container {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 16px;
+      padding: 2.5rem;
+      margin-bottom: 3rem;
+      backdrop-filter: blur(10px);
+    }
+    
+    .section-title {
+      color: #ffffff;
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      text-align: center;
+    }
+    
+    .section-subtitle {
+      color: #888888;
+      font-size: 1rem;
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+    
+    .shop-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 2rem;
+    }
+    
+    .shop-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+    }
+    
+    .shop-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #22c55e, transparent);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
     .shop-card:hover {
-      transform: scale(1.03);
-      box-shadow: 0 0 40px rgba(255,255,255,0.4);
+      transform: translateY(-4px);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
+      border-color: rgba(255, 255, 255, 0.15);
+      background: rgba(255, 255, 255, 0.05);
     }
-    .shop-card-title {
-      font-size: 20px;
-      color: #fff;
-      font-family: 'Monoton', monospace;
-      margin-bottom: 6px;
-      letter-spacing: 1px;
+    
+    .shop-card:hover::before {
+      opacity: 1;
     }
-    .shop-card-price {
-      font-size: 18px;
-      color: #fff;
-      font-family: 'Monoton', monospace;
-      margin-bottom: 10px;
+    
+    .card-icon {
+      text-align: center;
+      margin-bottom: 1.5rem;
     }
-    .shop-card-desc {
-      font-size: 14px;
-      color: #aaa;
-      margin-bottom: 0;
-      font-family: monospace;
-      word-break: break-word;
+    
+    .card-icon img {
+      width: 60px;
+      height: 60px;
+      filter: brightness(0.9);
+      opacity: 0.8;
     }
-    @media (max-width: 1100px) {
-      .shop-grid { flex-direction: column; align-items: center; }
+    
+    .card-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #ffffff;
+      margin-bottom: 1rem;
+      text-align: center;
+      line-height: 1.3;
     }
-    @keyframes fadeInShop {
-      from { opacity: 0; transform: translateY(-5px); }
-      to { opacity: 1; }
+    
+    .card-description {
+      font-size: 0.95rem;
+      color: #aaaaaa;
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+      text-align: center;
     }
-    .logout-flicker:hover {
-      animation: flicker 0.7s infinite alternate;
+    
+    .card-price {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: #22c55e;
+      text-align: center;
+      margin-bottom: 1.5rem;
     }
-    @keyframes flicker {
-      0% { opacity: 1; color: #ff4f4f; }
-      10% { opacity: 0.7; color: #ffb3b3; }
-      20% { opacity: 0.5; color: #ff4f4f; }
-      30% { opacity: 0.8; color: #ffb3b3; }
-      40% { opacity: 0.6; color: #ff4f4f; }
-      50% { opacity: 1; color: #ffb3b3; }
-      60% { opacity: 0.7; color: #ff4f4f; }
-      70% { opacity: 0.9; color: #ffb3b3; }
-      80% { opacity: 0.5; color: #ff4f4f; }
-      90% { opacity: 0.8; color: #ffb3b3; }
-      100% { opacity: 1; color: #ff4f4f; }
+    
+    /* Add to Cart Button */
+    .add-to-cart-btn {
+      width: 100%;
+      background: #22c55e;
+      color: #000000;
+      border: none;
+      padding: 0.875rem 1.5rem;
+      font-size: 0.95rem;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
-    .back-arrow {
-      text-shadow: 0 0 8px #fff, 0 0 16px #fff, 0 0 2px #fff;
+    
+    .add-to-cart-btn:hover {
+      background: #16a34a;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 16px rgba(34, 197, 94, 0.3);
+    }
+    
+    /* Section Divider */
+    .section-divider {
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+      margin: 4rem 0;
+    }
+    
+    /* Footer */
+    .legal-footer {
+      background: rgba(0, 0, 0, 0.8);
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 3rem 0;
+      margin-top: 4rem;
+    }
+    
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      text-align: center;
+    }
+    
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+    
+    .footer-links a {
+      color: #888888;
+      text-decoration: none;
+      font-size: 0.875rem;
+      transition: color 0.2s ease;
+    }
+    
+    .footer-links a:hover {
+      color: #ffffff;
+    }
+    
+    .footer-copyright {
+      color: #666666;
+      font-size: 0.875rem;
+    }
+    
+    /* Modal Styles */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(10, 10, 10, 0.8);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 10000;
+      backdrop-filter: blur(5px);
+    }
+    
+    .modal-overlay.show {
+      display: flex;
+    }
+    
+    .modal-content {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 2rem;
+      max-width: 400px;
+      width: 90%;
+      text-align: center;
+      backdrop-filter: blur(20px);
+    }
+    
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+    
+    .modal-header h3 {
+      color: #ffffff;
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin: 0;
+    }
+    
+    .modal-close {
+      background: none;
+      border: none;
+      color: #888888;
+      font-size: 1.5rem;
+      cursor: pointer;
+      padding: 0;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: all 0.2s ease;
+    }
+    
+    .modal-close:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: #ffffff;
+    }
+    
+    .modal-body p {
+      color: #cccccc;
+      font-size: 1rem;
+      margin-bottom: 1rem;
+      line-height: 1.6;
+    }
+    
+    .modal-warning {
+      color: #888888;
+      font-size: 0.875rem;
+    }
+    
+    .modal-footer {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      margin-top: 2rem;
+    }
+    
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #ffffff;
+      padding: 0.75rem 1.5rem;
+      border-radius: 6px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+    
+    .btn-danger {
+      background: #dc2626;
+      border: none;
+      color: #ffffff;
+      padding: 0.75rem 1.5rem;
+      border-radius: 6px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    .btn-danger:hover {
+      background: #b91c1c;
+      transform: translateY(-1px);
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .navbar {
+        padding: 1rem;
+      }
+      
+      .nav-brand a {
+        font-size: 1.25rem;
+      }
+      
+      .hero-slideshow {
+        height: 500px;
+        margin-top: 70px;
+      }
+      
+      .slide-content {
+        flex-direction: column;
+        padding: 0 1rem;
+        gap: 2rem;
+        text-align: center;
+      }
+      
+      .slide-text h2 {
+        font-size: 2rem;
+      }
+      
+      .slide-text p {
+        font-size: 1rem;
+      }
+      
+      .slide-price {
+        font-size: 1.5rem;
+      }
+      
+      .shop-main {
+        padding: 2rem 1rem;
+      }
+      
+      .section-container {
+        padding: 2rem 1.5rem;
+      }
+      
+      .section-title {
+        font-size: 2rem;
+      }
+      
+      .shop-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+      
+      .slideshow-control {
+        width: 40px;
+        height: 40px;
+        font-size: 1.25rem;
+      }
+      
+      .slideshow-control.prev {
+        left: 1rem;
+      }
+      
+      .slideshow-control.next {
+        right: 1rem;
+      }
+      
+      .footer-links {
+        flex-direction: column;
+        gap: 1rem;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .slide-text h2 {
+        font-size: 1.75rem;
+      }
+      
+      .section-title {
+        font-size: 1.75rem;
+      }
+      
+      .shop-card {
+        padding: 1.5rem;
+      }
+      
+      .card-title {
+        font-size: 1.25rem;
+      }
     }
   </style>
 </head>
 <body>
-  <div id="back-arrow" class="back-arrow" style="position:fixed;top:18px;left:18px;z-index:10;font-size:28px;cursor:pointer;user-select:none;">&larr;</div>
-  <div id="profile-link" style="position:fixed;top:28px;right:24px;z-index:10;font-family:'Fira Mono',Consolas,'Courier New',monospace;font-size:15px;letter-spacing:1px;">
-    <a href="profile.html" style="color:#8aff8a;text-shadow:0 0 8px #8aff8a,0 0 2px #8aff8a;text-decoration:none;cursor:pointer;">Profile</a>
+  <header>
+    <nav class="navbar">
+      <div class="nav-brand">
+        <a href="index.html">supremacy.club</a>
+        <div class="nav-subtitle">Premium Hardware & Software</div>
+      </div>
+      <div class="nav-menu">
+        <!-- Guest Navigation (shown when not logged in) -->
+        <div id="guest-nav">
+          <a href="/login" class="nav-btn">Sign In</a>
+        </div>
+        
+        <!-- User Navigation (shown when logged in) -->
+        <div id="user-nav" style="display: none;">
+          <a href="profile.html" class="nav-btn">Profile</a>
+        </div>
+        
+        <div class="cart-container">
+          <div class="cart-icon" id="cart-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="9" cy="21" r="1"></circle>
+              <circle cx="20" cy="21" r="1"></circle>
+              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+            </svg>
+            <span class="cart-count" id="cart-count">0</span>
+          </div>
+          <div class="cart-dropdown" id="cart-dropdown">
+            <div class="cart-items" id="cart-items">
+              <div class="empty-cart">Your cart is empty</div>
+            </div>
+            <div class="cart-total">
+              <span>Total: $<span id="cart-total">0</span></span>
+            </div>
+            <button class="checkout-btn" onclick="handleCheckout()">Checkout</button>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </header>
+  
+  <canvas id="grid-canvas" style="position: fixed; top: 0; left: 0; z-index: -1; pointer-events: none;"></canvas>
+  
+  <!-- Hero Slideshow Section -->
+  <div class="hero-slideshow">
+    <div class="slideshow-container">
+      <div class="slide active" data-slide="0">
+        <div class="slide-content">
+          <div class="slide-image">
+            <img src="assets/images/frontcard.png" alt="Direct Memory Access Card" />
+          </div>
+          <div class="slide-text">
+            <h2>Direct Memory Access Card</h2>
+            <p>High-performance hardware solution for advanced data processing</p>
+            <div class="slide-price">$149.00</div>
+            <button class="slide-btn" onclick="viewCurrentProduct(event)">View Product</button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="slide" data-slide="1">
+        <div class="slide-content">
+          <div class="slide-image">
+            <img src="assets/images/fuser/Screenshot 2025-08-05 142022.png" alt="HDMI Fuser Device" />
+          </div>
+          <div class="slide-text">
+            <h2>HDMI Fuser Device</h2>
+            <p>5th Generation Fusion Device | 2K/144HZ Support</p>
+            <div class="slide-price">$99.00</div>
+            <button class="slide-btn" onclick="viewCurrentProduct(event)">View Product</button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="slide" data-slide="2">
+        <div class="slide-content">
+          <div class="slide-image">
+            <img src="assets/images/macku/img1.png" alt="Macku Arduino" />
+          </div>
+          <div class="slide-text">
+            <h2>Macku Arduino</h2>
+            <p>Advanced development device for prototyping and embedded systems</p>
+            <div class="slide-price">$34.00</div>
+            <button class="slide-btn" onclick="viewCurrentProduct(event)">View Product</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Slideshow Navigation -->
+    <div class="slideshow-nav">
+      <button class="nav-dot active" data-slide="0"></button>
+      <button class="nav-dot" data-slide="1"></button>
+      <button class="nav-dot" data-slide="2"></button>
+    </div>
+    
+    <!-- Slideshow Controls -->
+    <button class="slideshow-control prev" onclick="changeSlide(-1)">‹</button>
+    <button class="slideshow-control next" onclick="changeSlide(1)">›</button>
   </div>
-  <canvas id="matrix-canvas"></canvas>
-  <canvas id="grid-canvas"></canvas>
-  <div class="crt-overlay"></div>
-  <div style="width:100%;text-align:center;margin-top:24px;margin-bottom:18px;">
-    <span class="logo-text" id="shop-logo-text"></span>
-  </div>
-  <div class="shop-separator-bar" style="width:80vw;max-width:900px;margin:0 auto 32px auto;height:2.5px;background:rgba(255,255,255,0.18);border-radius:2px;box-shadow:0 0 8px #fff4;backdrop-filter:blur(1.5px);"></div>
+  
   <div class="shop-main">
-    <div class="shop-grid">
-      <div class="shop-card" onclick="window.location.href='product-invite.html'">
-        <div style="width:100%;display:flex;flex-direction:column;align-items:center;">
-          <div style="font-family:'Courier New',monospace;font-size:15px;color:#fff;margin-bottom:6px;text-align:center;">Invite Code</div>
-          <img src="https://img.icons8.com/ios/50/code--v1.png" alt="Key Icon" style="height:44px;width:auto;filter:invert(0.9) drop-shadow(0 0 2px #fff);margin-bottom:8px;" />
+    <!-- Hardware Section -->
+    <div class="section-container">
+      <div class="section-title">Hardware</div>
+      <div class="section-subtitle">Physical hardware components and devices</div>
+      
+      <div class="shop-grid">
+        <div class="shop-card" onclick="window.location.href='product-dma75t.html'">
+          <div class="card-icon">
+            <img src="https://img.icons8.com/ios/50/processor.png" alt="Direct Memory Access Card" />
+          </div>
+          <div class="card-title">Direct Memory Access Card</div>
+          <div class="card-description">High-performance Direct Memory Access card for advanced data processing and transfer operations. Premium hardware solution.</div>
+          <div class="card-price">$149.00</div>
         </div>
-        <div class="shop-card-desc">Buy invite codes to give your friends access to $benz.club. Lifetime access, instant delivery.</div>
-      </div>
-      <!-- Product1 Panel Start -->
-      <div class="shop-card" onclick="window.location.href='product1.html'">
-        <div style="width:100%;display:flex;flex-direction:column;align-items:center;">
-          <div style="font-family:'Courier New',monospace;font-size:15px;color:#fff;margin-bottom:6px;text-align:center;">Product1</div>
-          <img src="https://img.icons8.com/ios/50/box--v1.png" alt="Box Icon" style="height:44px;width:auto;filter:invert(0.9) drop-shadow(0 0 2px #fff);margin-bottom:8px;" />
+        
+        <div class="shop-card" onclick="window.location.href='product-macku-arduino.html'">
+          <div class="card-icon">
+            <img src="https://img.icons8.com/ios/50/arduino.png" alt="Arduino Icon" />
+          </div>
+          <div class="card-title">Macku Arduino</div>
+          <div class="card-description">Advanced Arduino development device for prototyping and embedded systems development. Professional-grade hardware for makers and developers.</div>
+          <div class="card-price">$34.00</div>
         </div>
-        <div class="shop-card-desc">A new exclusive product for $benz.club members. Details coming soon—watch this space!</div>
+        
+        <div class="shop-card" onclick="window.location.href='product-hdmi-fuser.html'">
+          <div class="card-icon">
+            <img src="https://img.icons8.com/ios/50/display.png" alt="HDMI Fuser Device" />
+          </div>
+          <div class="card-title">HDMI Fuser Device</div>
+          <div class="card-description">HDMI DMA 5th Generation Fusion Device | Supports 2K/144HZ - The Latest Official Version - CABLES INCLUDED</div>
+          <div class="card-price">$99.00</div>
+        </div>
       </div>
-      <!-- Product1 Panel End -->
+    </div>
+
+    <div class="section-divider"></div>
+
+    <!-- Software Section -->
+    <div class="section-container">
+      <div class="section-title">Software</div>
+      <div class="section-subtitle">Digital products and access codes</div>
+      
+      <div class="shop-grid">
+        <div class="shop-card" onclick="window.location.href='product-invite.html'">
+          <div class="card-icon">
+            <img src="https://img.icons8.com/ios/50/code--v1.png" alt="Code Icon" />
+          </div>
+          <div class="card-title">Invite Code</div>
+          <div class="card-description">Buy invite codes to give your friends access to supremacy.club. Lifetime access, instant delivery.</div>
+          <div class="card-price">$9.99</div>
+          <button class="add-to-cart-btn" 
+                  data-product-id="invite-code" 
+                  data-product-name="Invite Code" 
+                  data-product-price="9.99" 
+                  data-product-image="assets/images/code-icon.png">
+            Add to Cart
+          </button>
+        </div>
+        
+        <div class="shop-card" onclick="window.location.href='product1.html'">
+          <div class="card-icon">
+            <img src="https://img.icons8.com/ios/50/box--v1.png" alt="Box Icon" />
+          </div>
+          <div class="card-title">Product1</div>
+          <div class="card-description">A new exclusive product for supremacy.club members. Details coming soon—watch this space!</div>
+          <div class="card-price">$15.99</div>
+          <button class="add-to-cart-btn" 
+                  data-product-id="product1" 
+                  data-product-name="Product1" 
+                  data-product-price="15.99" 
+                  data-product-image="assets/images/box-icon.png">
+            Add to Cart
+          </button>
+        </div>
+      </div>
     </div>
   </div>
-  <div class="modal hidden" id="confirm-modal">
-    <div class="modal-box">
-      <p id="modal-message">Are you sure you want to log out?</p>
-      <div class="modal-buttons">
-        <button id="confirm-yes" class="btn-small">Yes</button>
-        <button id="confirm-no" class="btn-small danger">Cancel</button>
+
+  <!-- Checkout Error Modal -->
+  <div id="checkout-error-modal" class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Sign In Required</h3>
+        <button class="modal-close" id="checkout-error-modal-close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p id="checkout-error-message">You need to sign in before you can checkout.</p>
+        <p class="modal-warning">Please sign in to proceed with your purchase.</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" id="checkout-error-cancel">Cancel</button>
+        <button class="btn-danger" id="checkout-error-signin">Sign In</button>
       </div>
     </div>
   </div>
+  
   <script src="assets/js/script.js"></script>
   <script src="assets/js/shop.js"></script>
+  <script src="assets/js/cart.js"></script>
   <script>
-    // Typewriter effect for $benz.club - shop
-    const shopLogoText = "$benz.club - shop";
-    const shopLogoEl = document.getElementById("shop-logo-text");
-    shopLogoEl.innerHTML = "";
-    [...shopLogoText].forEach((ch, i) => {
-      const span = document.createElement("span");
-      span.textContent = ch;
-      span.style.animationDelay = `${i * 0.1}s`;
-      shopLogoEl.appendChild(span);
+    // Typewriter effect for nav brand
+    function typeNavBrand() {
+      const navBrand = document.querySelector('.nav-brand a');
+      const navSubtitle = document.querySelector('.nav-subtitle');
+      const brandText = "supremacy.club";
+      const subtitleText = "Premium Hardware & Software";
+      
+      // Type main brand
+      navBrand.innerHTML = "";
+      [...brandText].forEach((ch, i) => {
+        const span = document.createElement("span");
+        span.textContent = ch;
+        span.style.animationDelay = `${i * 0.1}s`;
+        navBrand.appendChild(span);
+      });
+      
+      // Type subtitle after main brand finishes
+      setTimeout(() => {
+        navSubtitle.innerHTML = "";
+        const words = subtitleText.split(' ');
+        words.forEach((word, wordIndex) => {
+          const wordSpan = document.createElement("span");
+          wordSpan.style.marginRight = "8px";
+          wordSpan.style.display = "inline-block";
+          
+          [...word].forEach((ch, i) => {
+            const span = document.createElement("span");
+            span.textContent = ch;
+            span.style.animationDelay = `${((wordIndex * word.length + i) * 0.05) + 2}s`;
+            wordSpan.appendChild(span);
+          });
+          
+          navSubtitle.appendChild(wordSpan);
+        });
+      }, 100);
+    }
+    
+    // Check authentication status
+    async function checkAuthStatus() {
+      try {
+        console.log('Checking authentication status...');
+        const response = await fetch('/api/auth/status');
+        const data = await response.json();
+        console.log('Auth status response:', data);
+        
+        if (data.authenticated) {
+          // User is logged in
+          console.log('User is authenticated, showing profile button');
+          document.getElementById('guest-nav').style.display = 'none';
+          document.getElementById('user-nav').style.display = 'flex';
+        } else {
+          // User is not logged in
+          console.log('User is not authenticated, showing sign in button');
+          document.getElementById('guest-nav').style.display = 'flex';
+          document.getElementById('user-nav').style.display = 'none';
+        }
+      } catch (error) {
+        console.error('Error checking auth status:', error);
+        // Default to guest view if error
+        document.getElementById('guest-nav').style.display = 'flex';
+        document.getElementById('user-nav').style.display = 'none';
+      }
+    }
+    
+    // Handle checkout with authentication check
+    function handleCheckout() {
+      // Check if user is authenticated
+      fetch('/api/auth/status')
+        .then(response => response.json())
+        .then(data => {
+          if (data.authenticated) {
+            // User is logged in, proceed to checkout
+            window.location.href = 'checkout.html';
+          } else {
+            // User is not logged in, show popup modal
+            showCheckoutError();
+          }
+        })
+        .catch(error => {
+          console.error('Error checking auth status:', error);
+          showCheckoutError();
+        });
+    }
+    
+    // Show checkout error popup
+    function showCheckoutError() {
+      const modal = document.getElementById('checkout-error-modal');
+      if (modal) {
+        modal.classList.add('show');
+      }
+    }
+    
+    // Close checkout error popup
+    function closeCheckoutError() {
+      const modal = document.getElementById('checkout-error-modal');
+      if (modal) {
+        modal.classList.remove('show');
+      }
+    }
+    
+    // Show notification
+    function showNotification(message, type = 'info') {
+      // Remove existing notifications
+      const existingNotifications = document.querySelectorAll('.notification');
+      existingNotifications.forEach(notification => notification.remove());
+      
+      // Create notification element
+      const notification = document.createElement('div');
+      notification.className = `notification ${type}`;
+      notification.textContent = message;
+      notification.style.cssText = `
+        position: fixed;
+        top: 120px;
+        right: 20px;
+        padding: 15px 20px;
+        border-radius: 8px;
+        color: #fff;
+        font-size: 14px;
+        font-weight: 500;
+        letter-spacing: 1px;
+        z-index: 10000;
+        max-width: 300px;
+        word-wrap: break-word;
+        ${type === 'error' ? 'background: rgba(255, 100, 100, 0.9); border: 1px solid rgba(255, 100, 100, 0.3);' : 
+          type === 'success' ? 'background: rgba(138, 255, 138, 0.9); border: 1px solid rgba(138, 255, 138, 0.3);' : 
+          'background: rgba(100, 150, 255, 0.9); border: 1px solid rgba(100, 150, 255, 0.3);'}
+      `;
+      
+      document.body.appendChild(notification);
+      
+      // Auto-remove after 5 seconds
+      setTimeout(() => {
+        if (notification.parentNode) {
+          notification.remove();
+        }
+      }, 5000);
+    }
+    
+    // Slideshow functionality
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const dots = document.querySelectorAll('.nav-dot');
+    const totalSlides = slides.length;
+    
+    function showSlide(index) {
+      // Hide all slides
+      slides.forEach(slide => slide.classList.remove('active'));
+      dots.forEach(dot => dot.classList.remove('active'));
+      
+      // Show selected slide
+      slides[index].classList.add('active');
+      dots[index].classList.add('active');
+      
+      currentSlide = index;
+    }
+    
+    function changeSlide(direction) {
+      let newSlide = currentSlide + direction;
+      
+      if (newSlide < 0) {
+        newSlide = totalSlides - 1;
+      } else if (newSlide >= totalSlides) {
+        newSlide = 0;
+      }
+      
+      showSlide(newSlide);
+    }
+    
+    // Auto-advance slideshow
+    function autoAdvance() {
+      changeSlide(1);
+    }
+    
+    // Add click event listeners to dots
+    dots.forEach((dot, index) => {
+      dot.addEventListener('click', () => {
+        showSlide(index);
+      });
     });
-    document.getElementById('back-arrow').onclick = function() {
-      document.getElementById('confirm-modal').classList.remove('hidden');
-    };
-    document.getElementById('confirm-yes').onclick = function() {
-      window.location.href = 'index.html';
-    };
-    document.getElementById('confirm-no').onclick = function() {
-      document.getElementById('confirm-modal').classList.add('hidden');
-    };
+    
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') {
+        changeSlide(-1);
+      } else if (e.key === 'ArrowRight') {
+        changeSlide(1);
+      }
+    });
+
+    // Function to view current product details
+    function viewCurrentProduct(event) {
+      const currentSlideElement = document.querySelector('.slide.active');
+      
+      if (!currentSlideElement) {
+        console.error('No active slide found');
+        return;
+      }
+      
+      const slideIndex = currentSlideElement.dataset.slide;
+      
+      // Map slide index to product page URL
+      const productUrls = {
+        '0': 'product-dma75t.html',           // Direct Memory Access Card
+        '1': 'product-hdmi-fuser.html',       // HDMI Fuser Device
+        '2': 'product-macku-arduino.html'     // Macku Arduino
+      };
+      
+      const productUrl = productUrls[slideIndex];
+      
+      if (productUrl) {
+        // Add visual feedback
+        const button = event.target;
+        
+        // Add click animation
+        button.style.transform = 'translateY(-1px) scale(0.98)';
+        button.style.transition = 'all 0.1s ease';
+        
+        // Show loading state
+        const originalText = button.textContent;
+        button.textContent = 'Loading...';
+        button.disabled = true;
+        
+        // Navigate after brief delay for visual feedback
+        setTimeout(() => {
+          window.location.href = productUrl;
+        }, 200);
+      } else {
+        console.error('No product URL found for slide index:', slideIndex);
+      }
+    }
+    
+    // Initialize effects when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+      checkAuthStatus();
+      
+      // Initialize slideshow
+      if (slides.length > 0) {
+        console.log('Initializing slideshow with', slides.length, 'slides');
+        showSlide(0); // Ensure first slide is active
+        
+        // Start auto-advance slideshow
+        setInterval(autoAdvance, 5000); // Change slide every 5 seconds
+      } else {
+        console.error('No slides found for slideshow');
+      }
+      
+      // Modal event listeners
+      const checkoutErrorModal = document.getElementById('checkout-error-modal');
+      const checkoutErrorModalClose = document.getElementById('checkout-error-modal-close');
+      const checkoutErrorCancel = document.getElementById('checkout-error-cancel');
+      const checkoutErrorSignin = document.getElementById('checkout-error-signin');
+
+      if (checkoutErrorModalClose) {
+        checkoutErrorModalClose.addEventListener('click', () => {
+          closeCheckoutError();
+        });
+      }
+
+      if (checkoutErrorCancel) {
+        checkoutErrorCancel.addEventListener('click', () => {
+          closeCheckoutError();
+        });
+      }
+
+      if (checkoutErrorSignin) {
+        checkoutErrorSignin.addEventListener('click', () => {
+          window.location.href = '/login';
+        });
+      }
+
+      // Close modal when clicking outside
+      if (checkoutErrorModal) {
+        checkoutErrorModal.addEventListener('click', (e) => {
+          if (e.target === checkoutErrorModal) {
+            closeCheckoutError();
+          }
+        });
+      }
+      
+      // Cart is automatically initialized by cart.js
+      console.log('Cart initialization handled by cart.js');
+      
+      // Debug cart elements
+      const cartIcon = document.getElementById('cart-icon');
+      const cartDropdown = document.getElementById('cart-dropdown');
+      console.log('Cart icon found:', !!cartIcon);
+      console.log('Cart dropdown found:', !!cartDropdown);
+      
+      // Add to cart functionality
+      document.addEventListener('click', (e) => {
+        if (e.target.classList.contains('add-to-cart-btn')) {
+          e.preventDefault();
+          e.stopPropagation();
+          
+          const productId = e.target.dataset.productId;
+          const productName = e.target.dataset.productName;
+          const productPrice = parseFloat(e.target.dataset.productPrice);
+          const productImage = e.target.dataset.productImage;
+          
+          console.log('Adding to cart:', { productId, productName, productPrice, productImage });
+          
+          if (window.cartManager) {
+            window.cartManager.addToCart({
+              id: productId,
+              name: productName,
+              price: productPrice,
+              image: productImage
+            });
+          } else {
+            console.error('Cart manager not available');
+          }
+        }
+      });
+      
+      // Start grid effect (same as login page background)
+      if (typeof startGrid === 'function') {
+        startGrid();
+      }
+      
+      // Navbar scroll functionality
+      let lastScrollTop = 0;
+      let scrollThreshold = 100;
+      let navbar = document.querySelector('.navbar');
+      
+      window.addEventListener('scroll', function() {
+        let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        
+        // Add scrolled class when scrolling down
+        if (scrollTop > 50) {
+          navbar.classList.add('scrolled');
+        } else {
+          navbar.classList.remove('scrolled');
+        }
+        
+        // Hide/show navbar based on scroll direction
+        if (scrollTop > lastScrollTop && scrollTop > scrollThreshold) {
+          // Scrolling down - hide navbar
+          navbar.classList.add('hidden');
+        } else {
+          // Scrolling up - show navbar
+          navbar.classList.remove('hidden');
+        }
+        
+        lastScrollTop = scrollTop;
+      });
+      
+      // Show navbar when user scrolls to top
+      window.addEventListener('scroll', function() {
+        if (window.pageYOffset === 0) {
+          navbar.classList.remove('hidden');
+        }
+      });
+    });
   </script>
+  
+  <!-- Footer with Legal Links -->
+  <footer class="legal-footer">
+    <div class="footer-content">
+      <div class="footer-links">
+        <a href="/terms">Terms and Conditions</a>
+        <a href="https://discord.gg/7naGtsyc35" target="_blank" rel="noopener noreferrer">
+          <i class="fab fa-discord"></i> Join Discord
+        </a>
+      </div>
+      <div class="footer-copyright">
+        <p>&copy; 2024 Supremacy Club. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
 </body>
 </html> 

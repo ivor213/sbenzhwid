@@ -11,9 +11,11 @@ MONGO_URI=your_mongodb_connection_string
 # JWT Configuration  
 JWT_SECRET=your-super-secure-jwt-secret-key-here-change-this-to-something-random-and-long
 
-# PayPal Configuration
-PAYPAL_CLIENT_ID=your_paypal_client_id
-PAYPAL_SECRET=your_paypal_secret
+# 2Checkout Configuration
+TWOCHECKOUT_MERCHANT_CODE=your_merchant_code
+TWOCHECKOUT_PRIVATE_KEY=your_private_key
+TWOCHECKOUT_PUBLISHABLE_KEY=your_publishable_key
+TWOCHECKOUT_SECRET_KEY=your_secret_key
 
 # Server Configuration
 PORT=3000
@@ -71,7 +73,7 @@ SALT_ROUNDS=12
 - ✅ HSTS preload and subdomain inclusion
 
 ### 7. Payment Security
-- ✅ PayPal credentials moved to environment variables
+- ✅ 2Checkout credentials moved to environment variables
 - ✅ Server-side payment verification
 - ✅ Proper error handling for payment failures
 
@@ -89,8 +91,10 @@ The `.env` file is missing! Create it immediately:
 # Create .env file in benz-club/ directory
 MONGO_URI=your_mongodb_connection_string
 JWT_SECRET=your_strong_jwt_secret_here
-PAYPAL_CLIENT_ID=your_paypal_client_id
-PAYPAL_SECRET=your_paypal_secret
+TWOCHECKOUT_MERCHANT_CODE=your_merchant_code
+TWOCHECKOUT_PRIVATE_KEY=your_private_key
+TWOCHECKOUT_PUBLISHABLE_KEY=your_publishable_key
+TWOCHECKOUT_SECRET_KEY=your_secret_key
 SALT_ROUNDS=12
 NODE_ENV=development
 PORT=3000
@@ -126,7 +130,7 @@ Set `NODE_ENV=production` to enable secure cookies and HTTPS-only connections.
 ### Critical (Must Do)
 - [ ] Create `.env` file with all required variables
 - [ ] Generate and set strong JWT secret
-- [ ] Update PayPal credentials for production
+- [ ] Update 2Checkout credentials for production
 - [ ] Set NODE_ENV=production
 - [ ] Configure HTTPS/SSL certificates
 - [ ] Enable MongoDB authentication

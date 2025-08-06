@@ -1,5 +1,5 @@
 // script.js
-const logoText = "$benz.club";
+const logoText = "supremacy.club";
 const logoEl = document.getElementById("logo-text");
 let isRegistering = false;
 
@@ -12,6 +12,8 @@ function typeLogo() {
     logoEl.appendChild(span);
   });
 }
+
+
 
 function toggleForm() {
   isRegistering = !isRegistering;
@@ -54,6 +56,7 @@ function validateEmail(email) {
 }
 
 async function submitForm() {
+  console.log("submitForm called");
   const uname = document.getElementById("username").value.trim();
   const pwd = document.getElementById("password").value.trim();
   const email = document.getElementById("email").value.trim();
@@ -63,15 +66,17 @@ async function submitForm() {
   const loader = document.getElementById("loader");
   const remember = document.getElementById("remember").checked;
 
+  console.log("Form data:", { uname, pwd, email, invite, isRegistering, strengthLevel, remember });
+
   msg.textContent = "";
   loader.classList.remove("hidden");
 
   setTimeout(async () => {
     loader.classList.add("hidden");
 
-    if (!uname || !pwd || strengthLevel === "weak" ||
-        (isRegistering && (!invite || !validateEmail(email)))) {
-      msg.textContent = strengthLevel === "weak"
+    if (!uname || !pwd || 
+        (isRegistering && (strengthLevel === "weak" || !invite || !validateEmail(email)))) {
+      msg.textContent = isRegistering && strengthLevel === "weak"
         ? "Password must be at least medium strength."
         : isRegistering && !validateEmail(email)
         ? "Please enter a valid email."
@@ -82,10 +87,13 @@ async function submitForm() {
     }
 
     const payload = { username: uname, password: pwd, invite };
-    if (isRegistering) payload.email = email;
+    if (isRegistering) {
+      payload.email = email;
+    }
     if (!isRegistering) payload.remember = remember;
 
     const endpoint = isRegistering ? "register" : "login";
+    console.log("Making request to:", `/api/${endpoint}`, "with payload:", payload);
 
     const res = await fetch(`/api/${endpoint}`, {
       method: "POST",
@@ -93,7 +101,9 @@ async function submitForm() {
       body: JSON.stringify(payload)
     });
 
+    console.log("Response status:", res.status);
     const data = await res.json();
+    console.log("Response data:", data);
     if (data.success) {
       msg.textContent = isRegistering ? "Registered successfully!" : "Login successful.";
       msg.className = "message success";
@@ -184,7 +194,7 @@ function startGrid() {
 
   function draw() {
     ctx.clearRect(0, 0, w, h);
-    ctx.strokeStyle = "rgba(255,255,255,0.1)";
+    ctx.strokeStyle = "rgba(128,128,128,0.02)"; // Even more subtle
     const size = 50;
     const offsetX = (mouseX - w / 2) / 20;
     const offsetY = (mouseY - h / 2) / 20;
@@ -206,6 +216,19 @@ window.onload = () => {
     document.getElementById("password")
       .addEventListener("input", e => checkPasswordStrength(e.target.value));
   }
+  
+  // Only start matrix effect on login page (index.html) and profile page
+  const currentPage = window.location.pathname.split('/').pop();
+  const pathname = window.location.pathname;
+  if (
+    currentPage === '' || // root path
+    currentPage === 'index.html' ||
+    pathname === '/login' || // login route
+    currentPage === 'profile.html'
+  ) {
   startMatrix();
+  }
+  
+  // Always start grid effect on all pages
   startGrid();
 };

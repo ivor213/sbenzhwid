@@ -1,9 +1,0 @@
-C:\Users\ading\Desktop\sbenz-club-website\sbenz-loader\sbenz-loader\bin\Release\net8.0-windows\publish\sbenz-loader.exe
-C:\Users\ading\Desktop\sbenz-club-website\sbenz-loader\sbenz-loader\bin\Release\net8.0-windows\publish\sbenz-loader.dll
-C:\Users\ading\Desktop\sbenz-club-website\sbenz-loader\sbenz-loader\bin\Release\net8.0-windows\publish\sbenz-loader.deps.json
-C:\Users\ading\Desktop\sbenz-club-website\sbenz-loader\sbenz-loader\bin\Release\net8.0-windows\publish\sbenz-loader.runtimeconfig.json
-C:\Users\ading\Desktop\sbenz-club-website\sbenz-loader\sbenz-loader\bin\Release\net8.0-windows\publish\sbenz-loader.pdb
-C:\Users\ading\Desktop\sbenz-club-website\sbenz-loader\sbenz-loader\bin\Release\net8.0-windows\publish\Newtonsoft.Json.dll
-C:\Users\ading\Desktop\sbenz-club-website\sbenz-loader\sbenz-loader\bin\Release\net8.0-windows\publish\System.CodeDom.dll
-C:\Users\ading\Desktop\sbenz-club-website\sbenz-loader\sbenz-loader\bin\Release\net8.0-windows\publish\System.Management.dll
-C:\Users\ading\Desktop\sbenz-club-website\sbenz-loader\sbenz-loader\bin\Release\net8.0-windows\publish\runtimes\win\lib\net8.0\System.Management.dll

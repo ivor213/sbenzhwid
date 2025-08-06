@@ -3,157 +3,1167 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Profile - $benz.club</title>
-  <link rel="stylesheet" href="assets/css/style.css" />
-  <link rel="stylesheet" href="assets/css/profile.css" />
+  <title>Profile - supremacy.club</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      background: #0a0a0a;
+      color: #ffffff;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+      position: relative;
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    /* Navigation Bar */
+    .navbar {
+      background: rgba(10, 10, 10, 0.95);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 1rem 2rem;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.3s ease;
+    }
+    
+    .navbar.scrolled {
+      background: rgba(10, 10, 10, 0.98);
+      backdrop-filter: blur(30px);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+    
+    .navbar.hidden {
+      transform: translateY(-100%);
+    }
+    
+    .nav-brand a {
+      color: #ffffff;
+      text-decoration: none;
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+    
+    .nav-subtitle {
+      color: #888888;
+      font-size: 0.75rem;
+      font-weight: 400;
+      margin-top: 0.25rem;
+      opacity: 0;
+      transform: translateY(10px);
+      animation: fadeInUp 1.5s ease-out 0.5s forwards;
+    }
+    
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .nav-menu {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+    
+    .nav-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #ffffff;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+    
+    .nav-btn:hover {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.3);
+      transform: translateY(-1px);
+    }
+    
+    /* Cart Icon */
+    .cart-container {
+      position: relative;
+    }
+    
+    .cart-icon {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #ffffff;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+    
+    .cart-icon:hover {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.3);
+      transform: translateY(-1px);
+    }
+    
+    .cart-icon svg {
+      width: 16px;
+      height: 16px;
+    }
+    
+    #cart-count {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background: #ff4757;
+      color: white;
+      font-size: 11px;
+      font-weight: 700;
+      min-width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid #000000;
+      box-shadow: 0 2px 8px rgba(255, 71, 87, 0.4);
+      text-align: center;
+      line-height: 18px;
+      padding: 0;
+      margin: 0;
+    }
+    
+    /* Cart Dropdown */
+    .cart-dropdown {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      width: 350px;
+      background: rgba(10, 10, 10, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-10px);
+      transition: all 0.3s;
+      margin-top: 10px;
+      backdrop-filter: blur(20px);
+    }
+    
+    .cart-dropdown.show {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+    
+    .cart-dropdown::before {
+      content: '';
+      position: absolute;
+      top: -6px;
+      right: 20px;
+      width: 12px;
+      height: 12px;
+      background: #0a0a0a;
+      border-left: 1px solid rgba(255, 255, 255, 0.1);
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      transform: rotate(45deg);
+    }
+    
+    .cart-items {
+      padding: 1rem;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+    
+    .cart-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .cart-item:last-child {
+      border-bottom: none;
+    }
+    
+    .cart-item-image {
+      width: 36px;
+      height: 36px;
+      border-radius: 4px;
+      object-fit: cover;
+    }
+    
+    .cart-item-details {
+      flex: 1;
+    }
+    
+    .cart-item-name {
+      color: #ffffff;
+      font-size: 0.875rem;
+      font-weight: 500;
+      margin-bottom: 0.25rem;
+    }
+    
+    .cart-item-price {
+      color: #22c55e;
+      font-size: 0.875rem;
+      font-weight: 600;
+    }
+    
+    .cart-item-quantity {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+    
+    .quantity-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #ffffff;
+      width: 24px;
+      height: 24px;
+      border-radius: 4px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      transition: all 0.2s ease;
+    }
+    
+    .quantity-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+    
+    .remove-item {
+      background: rgba(220, 38, 38, 0.1);
+      border: 1px solid rgba(220, 38, 38, 0.2);
+      color: #dc2626;
+      width: 24px;
+      height: 24px;
+      border-radius: 4px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.875rem;
+      transition: all 0.2s ease;
+    }
+    
+    .remove-item:hover {
+      background: rgba(220, 38, 38, 0.2);
+      border-color: rgba(220, 38, 38, 0.3);
+    }
+    
+    .empty-cart {
+      color: #888888;
+      text-align: center;
+      padding: 2rem;
+      font-size: 0.875rem;
+    }
+    
+    .empty-cart p {
+      margin: 0 0 0.5rem 0;
+      color: #888888;
+    }
+    
+    .empty-cart p:first-child {
+      color: #ffffff;
+      font-weight: 500;
+      font-size: 1rem;
+    }
+    
+    .empty-cart-btn {
+      background: #22c55e;
+      color: #000000;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 6px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      display: inline-block;
+      margin-top: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .empty-cart-btn:hover {
+      background: #16a34a;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+    }
+    
+    .cart-total {
+      padding: 1rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #ffffff;
+      font-weight: 600;
+    }
+    
+    .checkout-btn {
+      background: #22c55e;
+      color: #000000;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 6px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      width: 100%;
+      margin-top: 0.5rem;
+    }
+    
+    .checkout-btn:hover {
+      background: #16a34a;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+    }
+    
+    /* Navigation */
+    .nav-bar {
+      background: rgba(10, 10, 10, 0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      padding: 20px 40px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .nav-brand {
+      color: #fff;
+      text-decoration: none;
+      font-size: 20px;
+      font-weight: 600;
+    }
+    
+    .back-btn {
+      color: #fff;
+      text-decoration: none;
+      font-size: 14px;
+      padding: 8px 16px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 6px;
+      transition: all 0.2s;
+    }
+    
+    .back-btn:hover {
+      background: rgba(255, 255, 255, 0.05);
+    }
+    
+    /* Main Container */
+    .profile-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 120px 2rem 4rem 2rem;
+      flex: 1;
+    }
+    
+    /* Header Section */
+    .profile-header {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 16px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      text-align: center;
+      backdrop-filter: blur(10px);
+    }
+    
+    .avatar {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      font-weight: 700;
+      color: #000000;
+      margin: 0 auto 1.5rem;
+      box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+    }
+    
+    .profile-name {
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: #ffffff;
+      letter-spacing: -0.5px;
+    }
+    
+    .profile-status {
+      display: inline-block;
+      background: rgba(34, 197, 94, 0.1);
+      border: 1px solid rgba(34, 197, 94, 0.2);
+      color: #22c55e;
+      padding: 0.25rem 0.75rem;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+      letter-spacing: 0.5px;
+    }
+    
+    .profile-uid {
+      color: #888888;
+      font-size: 0.875rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .logout-btn {
+      background: rgba(239, 68, 68, 0.1);
+      color: #ef4444;
+      border: 1px solid rgba(239, 68, 68, 0.2);
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .logout-btn:hover {
+      background: rgba(239, 68, 68, 0.2);
+      border-color: rgba(239, 68, 68, 0.3);
+      transform: translateY(-1px);
+    }
+    
+    /* Tabs */
+    .tabs {
+      display: flex;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      padding: 0.25rem;
+      margin-bottom: 2rem;
+      overflow-x: auto;
+      backdrop-filter: blur(10px);
+    }
+    
+    .tab-btn {
+      background: none;
+      border: none;
+      color: #888888;
+      padding: 0.75rem 1.25rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 0.875rem;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+    
+    .tab-btn.active {
+      background: rgba(255, 255, 255, 0.1);
+      color: #ffffff;
+    }
+    
+    .tab-btn:hover:not(.active) {
+      background: rgba(255, 255, 255, 0.05);
+      color: #ffffff;
+    }
+    
+    /* Content Sections */
+    .tab-content {
+      display: none;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 16px;
+      padding: 2rem;
+      backdrop-filter: blur(10px);
+    }
+    
+    .tab-content.active {
+      display: block;
+    }
+    
+    .section-title {
+      font-size: 1.25rem;
+      color: #ffffff;
+      margin-bottom: 1.5rem;
+      font-weight: 600;
+      letter-spacing: -0.5px;
+    }
+    
+    /* Info Grid */
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    
+    .info-item {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 1.5rem;
+    }
+    
+    .info-label {
+      color: #888888;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      letter-spacing: 0.5px;
+    }
+    
+    .info-value {
+      color: #ffffff;
+      font-size: 1rem;
+      font-weight: 600;
+    }
+    
+    /* Forms */
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    
+    .form-label {
+      display: block;
+      color: #cccccc;
+      font-size: 0.875rem;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+    }
+    
+    .form-input {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      color: #ffffff;
+      font-size: 0.875rem;
+      transition: all 0.2s ease;
+    }
+    
+    .form-input:focus {
+      outline: none;
+      border-color: rgba(34, 197, 94, 0.5);
+      background: rgba(255, 255, 255, 0.05);
+      box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);
+    }
+    
+    .form-btn {
+      background: #22c55e;
+      color: #000000;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .form-btn:hover {
+      background: #16a34a;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+    }
+    
+    .form-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+    
+    /* Messages */
+    .message {
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      margin-top: 1rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+    
+    .message.success {
+      background: rgba(34, 197, 94, 0.1);
+      border: 1px solid rgba(34, 197, 94, 0.2);
+      color: #22c55e;
+    }
+    
+    .message.error {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.2);
+      color: #ef4444;
+    }
+    
+    /* Activity Items */
+    .activity-item {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    
+    .activity-icon {
+      font-size: 1.125rem;
+      width: 3rem;
+      height: 3rem;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .activity-content {
+      flex: 1;
+    }
+    
+    .activity-title {
+      color: #ffffff;
+      font-size: 0.875rem;
+      margin-bottom: 0.25rem;
+      font-weight: 500;
+    }
+    
+    .activity-time {
+      color: #888888;
+      font-size: 0.75rem;
+    }
+    
+    /* License Keys & Invite Codes */
+    .key-item, .invite-item {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .key-text, .invite-text {
+      font-family: 'Courier New', monospace;
+      color: #ffffff;
+      font-size: 0.875rem;
+      font-weight: 600;
+    }
+    
+    .copy-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #ffffff;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.75rem;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .copy-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+    
+    /* Orders */
+    .order-item {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+    }
+    
+    .order-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    
+    .order-id {
+      color: #ffffff;
+      font-weight: 600;
+      font-size: 0.875rem;
+    }
+    
+    .order-total {
+      color: #22c55e;
+      font-size: 1rem;
+      font-weight: 700;
+    }
+    
+    .order-details {
+      color: #cccccc;
+      font-size: 0.875rem;
+      margin-bottom: 1rem;
+      line-height: 1.5;
+    }
+    
+    .order-status {
+      color: #22c55e;
+      text-transform: uppercase;
+      font-weight: 600;
+      font-size: 0.75rem;
+      letter-spacing: 0.5px;
+    }
+    
+    .view-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #ffffff;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: 0.75rem;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      display: inline-block;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .view-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.2);
+      transform: translateY(-1px);
+    }
+    
+    /* Modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(5px);
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+    
+    .modal-overlay.show {
+      opacity: 1;
+      visibility: visible;
+    }
+    
+    .modal-content {
+      background: rgba(10, 10, 10, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 0;
+      max-width: 400px;
+      width: 90%;
+      backdrop-filter: blur(15px);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      transform: scale(0.9) translateY(-20px);
+      transition: all 0.3s ease;
+    }
+    
+    .modal-overlay.show .modal-content {
+      transform: scale(1) translateY(0);
+    }
+    
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem 2rem 1rem 2rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .modal-header h3 {
+      color: #ffffff;
+      font-size: 1.125rem;
+      font-weight: 600;
+      margin: 0;
+      letter-spacing: -0.5px;
+    }
+    
+    .modal-close {
+      background: none;
+      border: none;
+      color: #888888;
+      font-size: 1.5rem;
+      cursor: pointer;
+      padding: 0;
+      width: 2rem;
+      height: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+    }
+    
+    .modal-close:hover {
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.1);
+    }
+    
+    .modal-body {
+      padding: 1.5rem 2rem;
+    }
+    
+    .modal-body p {
+      color: #cccccc;
+      font-size: 1rem;
+      line-height: 1.5;
+      margin: 0 0 1rem 0;
+    }
+    
+    .modal-warning {
+      color: #ef4444 !important;
+      font-size: 0.875rem !important;
+      font-weight: 600;
+      margin: 0 !important;
+    }
+    
+    .modal-footer {
+      display: flex;
+      gap: 1rem;
+      padding: 1rem 2rem 1.5rem 2rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .btn-secondary, .btn-danger {
+      flex: 1;
+      padding: 0.75rem 1.25rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: center;
+      border: none;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #ffffff;
+    }
+    
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.2);
+      transform: translateY(-1px);
+    }
+    
+    .btn-danger {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.2);
+      color: #ef4444;
+    }
+    
+    .btn-danger:hover {
+      background: rgba(239, 68, 68, 0.2);
+      color: #ffffff;
+      transform: translateY(-1px);
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      .navbar {
+        padding: 1rem 1.5rem;
+      }
+      
+      .profile-container {
+        padding: 100px 1rem 2rem 1rem;
+      }
+      
+      .profile-header {
+        padding: 1.5rem 1rem;
+      }
+      
+      .profile-name {
+        font-size: 1.5rem;
+      }
+      
+      .tabs {
+        padding: 0.25rem;
+      }
+      
+      .tab-btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.75rem;
+      }
+      
+      .tab-content {
+        padding: 1.5rem 1rem;
+      }
+      
+      .info-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .modal-content {
+        width: 95%;
+        margin: 1rem;
+      }
+      
+      .modal-header,
+      .modal-body,
+      .modal-footer {
+        padding-left: 1rem;
+        padding-right: 1rem;
+      }
+      
+      .modal-footer {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+    }
+  </style>
 </head>
 <body>
-  <div id="back-arrow" class="back-arrow">&larr;</div>
-  <canvas id="matrix-canvas"></canvas>
-  <canvas id="grid-canvas"></canvas>
-  <div class="crt-overlay"></div>
-  
-  <div class="profile-container">
-    <div class="profile-header">
-      <div class="profile-avatar">
-        <div class="avatar-placeholder" id="avatar-placeholder"></div>
-      </div>
-      <div class="profile-title-section">
-        <h1 class="profile-title" id="profile-name">Loading...</h1>
-        <div class="profile-status" id="profile-status">Member</div>
-        <div class="profile-uid">UID: <span id="profile-uid">-</span></div>
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="nav-brand">
+      <a href="index.html">supremacy.club</a>
+      <div class="nav-subtitle">Premium Hardware & Software</div>
+    </div>
+    <div class="nav-menu">
+      <a href="shop.html" class="nav-btn">Shop</a>
+      <a href="profile.html" class="nav-btn">Profile</a>
+      <div class="cart-container">
+        <div class="cart-icon" id="cart-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="9" cy="21" r="1"></circle>
+            <circle cx="20" cy="21" r="1"></circle>
+            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+          </svg>
+          <span class="cart-count" id="cart-count">0</span>
+        </div>
+        <div class="cart-dropdown" id="cart-dropdown">
+          <div class="cart-items" id="cart-items">
+            <div class="empty-cart">Your cart is empty</div>
+          </div>
+          <div class="cart-total">
+            <span>Total: $<span id="cart-total">0</span></span>
+          </div>
+          <button class="checkout-btn" onclick="handleCheckout()">Checkout</button>
+        </div>
       </div>
     </div>
-
-    <div class="profile-content">
-      <div class="profile-sidebar">
-        <nav class="profile-nav">
-          <button class="nav-tab active" data-tab="profile" onclick="switchTab('profile')">
-            Profile
-          </button>
-          <button class="nav-tab" data-tab="security" onclick="switchTab('security')">
-            Security
-          </button>
-          <button class="nav-tab" data-tab="activity" onclick="switchTab('activity')">
-            Activity
-          </button>
-          <button class="nav-tab" data-tab="account" onclick="switchTab('account')">
-            Account
-          </button>
-          <button class="nav-tab" data-tab="license-keys" onclick="switchTab('license-keys')">
-            License Keys
-          </button>
-          <button class="nav-tab" data-tab="invite-codes" onclick="switchTab('invite-codes')">
-            Invite Codes
-          </button>
-        </nav>
+  </nav>
+  
+  <!-- Main Container -->
+  <div class="profile-container">
+    <!-- Profile Header -->
+    <div class="profile-header">
+      <div class="avatar" id="avatar">?</div>
+      <h1 class="profile-name" id="profile-name">Loading...</h1>
+      <div class="profile-status" id="profile-status">Member</div>
+      <div class="profile-uid">UID: <span id="profile-uid">-</span></div>
+      <button class="logout-btn" onclick="logout()">Logout</button>
+    </div>
+    
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab('profile')">Profile</button>
+      <button class="tab-btn" onclick="switchTab('security')">Security</button>
+      <button class="tab-btn" onclick="switchTab('activity')">Activity</button>
+      <button class="tab-btn" onclick="switchTab('orders')">Orders</button>
+      <button class="tab-btn" onclick="switchTab('license-keys')">License Keys</button>
+      <button class="tab-btn" onclick="switchTab('invite-codes')">Invite Codes</button>
+    </div>
+    
+    <!-- Profile Tab -->
+    <div class="tab-content active" id="profile-tab">
+      <h2 class="section-title">Profile Information</h2>
+      <div class="info-grid">
+        <div class="info-item">
+          <div class="info-label">Username</div>
+          <div class="info-value" id="profile-username">-</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Email</div>
+          <div class="info-value" id="profile-email">-</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Registered</div>
+          <div class="info-value" id="profile-registered">-</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Last Login</div>
+          <div class="info-value" id="profile-last-login">-</div>
+        </div>
       </div>
-
-      <div class="profile-main">
-        <!-- Profile Tab -->
-        <div class="tab-content active" id="profile-tab">
-          <h2>Profile Information</h2>
-          <div class="profile-section">
-            <div class="info-grid">
-              <div class="info-item">
-                <label>Username</label>
-                <div class="info-display" id="profile-username">-</div>
-              </div>
-              <div class="info-item">
-                <label>Email</label>
-                <div class="info-display" id="profile-email">-</div>
-              </div>
-              <div class="info-item">
-                <label>Registered</label>
-                <div class="info-display" id="profile-registered">-</div>
-              </div>
-              <div class="info-item">
-                <label>Last Login</label>
-                <div class="info-display" id="profile-last-login">-</div>
-              </div>
-            </div>
-            <div class="profile-message" id="profile-message"></div>
-          </div>
+      <div class="message" id="profile-message"></div>
+    </div>
+    
+    <!-- Security Tab -->
+    <div class="tab-content" id="security-tab">
+      <h2 class="section-title">Security Settings</h2>
+      
+      <div>
+        <h3 style="color: #fff; margin-bottom: 20px; font-weight: 600;">Password Reset via Email</h3>
+        <p style="color: #ccc; margin-bottom: 20px;">If you've forgotten your password, we can send a reset link to your email address.</p>
+        
+        <div class="form-group">
+          <label class="form-label">Email Address</label>
+          <input type="email" id="reset-email" class="form-input" placeholder="your-email@example.com" readonly />
         </div>
-
-        <!-- Security Tab -->
-        <div class="tab-content" id="security-tab">
-          <h2>Security Settings</h2>
-          <div class="profile-section">
-            <h3>Change Password</h3>
-            <div class="security-form">
-              <div class="form-group">
-                <label>Current Password</label>
-                <input type="password" id="security-current-password" class="profile-input" placeholder="Current Password" autocomplete="current-password" />
-              </div>
-              <div class="form-group">
-                <label>New Password</label>
-                <input type="password" id="security-new-password" class="profile-input" placeholder="New Password" autocomplete="new-password" />
-                <div id="security-strength-msg" class="strength-msg"></div>
-              </div>
-              <div class="form-group">
-                <label>Confirm New Password</label>
-                <input type="password" id="security-confirm-password" class="profile-input" placeholder="Confirm New Password" autocomplete="new-password" />
-              </div>
-              <button class="profile-btn" id="security-save-btn">Update Password</button>
-              <div class="profile-message" id="security-message"></div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Activity Tab -->
-        <div class="tab-content" id="activity-tab">
-          <h2>Recent Activity</h2>
-          <div class="profile-section">
-            <h3>Recent Actions</h3>
-            <div class="activity-list" id="activity-list">
-              <div class="activity-loading">Loading activities...</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Account Tab -->
-        <div class="tab-content" id="account-tab">
-          <h2>Account Information</h2>
-          <div class="profile-section">
-            <div class="account-info">
-              <div class="account-item">
-                <label>Account Status</label>
-                <div class="status-badge active" id="account-status">Active</div>
-              </div>
-              <div class="account-item">
-                <label>Member Since</label>
-                <div class="info-display" id="account-created">-</div>
-              </div>
-              <div class="account-item">
-                <label>Account Type</label>
-                <div class="info-display" id="account-type">-</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- License Keys Tab -->
-        <div class="tab-content" id="license-keys-tab">
-          <h2>Your License Keys</h2>
-          <div class="profile-section">
-            <div id="license-keys-list">Loading license keys...</div>
-          </div>
-        </div>
-
-        <!-- Invite Codes Tab -->
-        <div class="tab-content" id="invite-codes-tab">
-          <h2>Your Active Invite Codes</h2>
-          <div class="profile-section">
-            <div id="invite-codes-list">Loading invite codes...</div>
-          </div>
-        </div>
+        
+        <button class="form-btn" id="reset-password-btn">Send Reset Email</button>
+        <div class="message" id="reset-message"></div>
+      </div>
+    </div>
+    
+    <!-- Activity Tab -->
+    <div class="tab-content" id="activity-tab">
+      <h2 class="section-title">Recent Activity</h2>
+      <div id="activity-list">
+        <div class="message">Loading activities...</div>
+      </div>
+    </div>
+    
+    <!-- Orders Tab -->
+    <div class="tab-content" id="orders-tab">
+      <h2 class="section-title">Your Orders</h2>
+      <div id="orders-list">
+        <div class="message">Loading orders...</div>
+      </div>
+    </div>
+    
+    <!-- License Keys Tab -->
+    <div class="tab-content" id="license-keys-tab">
+      <h2 class="section-title">Your License Keys</h2>
+      <div id="license-keys-list">
+        <div class="message">Loading license keys...</div>
+      </div>
+    </div>
+    
+    <!-- Invite Codes Tab -->
+    <div class="tab-content" id="invite-codes-tab">
+      <h2 class="section-title">Your Invite Codes</h2>
+      <div id="invite-codes-list">
+        <div class="message">Loading invite codes...</div>
       </div>
     </div>
   </div>
-
-  <script src="assets/js/script.js"></script>
+  
+  <!-- Logout Confirmation Modal -->
+  <div id="confirm-modal" class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Logout Confirmation</h3>
+        <button class="modal-close" id="confirm-modal-close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to log out?</p>
+        <p class="modal-warning">You will be redirected to the shop page.</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" id="confirm-cancel">Cancel</button>
+        <button class="btn-danger" id="confirm-yes">Logout</button>
+      </div>
+    </div>
+  </div>
+  
+  <script src="assets/js/cart.js"></script>
   <script>
+    // Navbar scroll functionality
+    let lastScrollTop = 0;
+    let scrollThreshold = 100;
+    let navbar = document.querySelector('.navbar');
+    
+    window.addEventListener('scroll', function() {
+      let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      
+      // Add scrolled class when scrolling down
+      if (scrollTop > 50) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+      
+      // Hide/show navbar based on scroll direction
+      if (scrollTop > lastScrollTop && scrollTop > scrollThreshold) {
+        // Scrolling down - hide navbar
+        navbar.classList.add('hidden');
+      } else {
+        // Scrolling up - show navbar
+        navbar.classList.remove('hidden');
+      }
+      
+      lastScrollTop = scrollTop;
+    });
+    
+    // Show navbar when user scrolls to top
+    window.addEventListener('scroll', function() {
+      if (window.pageYOffset === 0) {
+        navbar.classList.remove('hidden');
+      }
+    });
+    
+    // Checkout functionality
+    function handleCheckout() {
+      window.location.href = 'checkout.html';
+    }
+    
     // Tab switching functionality
     function switchTab(tabName) {
       // Hide all tab contents
@@ -162,7 +1172,7 @@
       });
       
       // Remove active class from all nav tabs
-      document.querySelectorAll('.nav-tab').forEach(tab => {
+      document.querySelectorAll('.tab-btn').forEach(tab => {
         tab.classList.remove('active');
       });
       
@@ -170,12 +1180,13 @@
       document.getElementById(tabName + '-tab').classList.add('active');
       
       // Add active class to selected nav tab
-      document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+      event.target.classList.add('active');
       
-      // Load activities if activity tab is selected
+      // Load data based on tab
       if (tabName === 'activity') {
         fetchActivities();
       }
+      if (tabName === 'orders') fetchOrders();
       if (tabName === 'license-keys') fetchLicenseKeys();
       if (tabName === 'invite-codes') fetchInviteCodes();
     }
@@ -219,7 +1230,7 @@
             
             return `
               <div class="activity-item">
-                <span class="activity-icon">${icon}</span>
+                <div class="activity-icon">${icon}</div>
                 <div class="activity-content">
                   <div class="activity-title">${activity.description}</div>
                   <div class="activity-time">${timeText}</div>
@@ -228,11 +1239,11 @@
             `;
           }).join('');
         } else {
-          activityList.innerHTML = '<div class="activity-empty">No activities found</div>';
+          activityList.innerHTML = '<div class="message">No activities found</div>';
         }
       } catch (error) {
         console.error('Error fetching activities:', error);
-        activityList.innerHTML = '<div class="activity-error">Failed to load activities</div>';
+        activityList.innerHTML = '<div class="message error">Failed to load activities</div>';
       }
     }
 
@@ -279,15 +1290,15 @@
           document.getElementById('profile-last-login').textContent = 'Never';
         }
         
-        // Update account info
-        document.getElementById('account-created').textContent = data.registeredAt ? data.registeredAt.split('T')[0] : '';
-        document.getElementById('account-type').textContent = data.isAdmin ? 'Administrator' : 'Member';
-        document.getElementById('account-status').textContent = data.isAdmin ? 'Admin' : 'Active';
-        document.getElementById('account-status').className = data.isAdmin ? 'status-badge admin' : 'status-badge active';
-        
         // Generate avatar placeholder
-        const avatar = document.getElementById('avatar-placeholder');
+        const avatar = document.getElementById('avatar');
         avatar.textContent = data.username.charAt(0).toUpperCase();
+        
+        // Set email for password reset
+        const resetEmail = document.getElementById('reset-email');
+        if (resetEmail) {
+          resetEmail.value = data.email;
+        }
         
         window._originalProfileUsername = data.username;
       } catch {
@@ -303,142 +1314,250 @@
       }
     }
 
-    // Event listeners
-    document.getElementById('back-arrow').onclick = function() {
-      window.location.href = 'shop.html';
-    };
 
-    // Password strength checker
-    function checkPasswordStrength(password) {
-      const msg = document.getElementById("security-strength-msg");
-      let strength = 0;
-      if (password.length >= 8) strength++;
-      if (/[A-Z]/.test(password) && /[a-z]/.test(password)) strength++;
-      if (/[0-9]/.test(password)) strength++;
-      if (/[^A-Za-z0-9]/.test(password)) strength++;
-      
-      if (!password) {
-        msg.textContent = "";
-        msg.className = "strength-msg";
-        return;
-      }
-      
-      msg.textContent = strength <= 1 ? "Weak" : strength === 2 ? "Medium" : "Strong";
-      msg.className = `strength-msg ${strength <= 1 ? 'weak' : strength === 2 ? 'medium' : 'strong'}`;
-    }
-
-    // Security password change
-    document.getElementById('security-new-password').addEventListener('input', function(e) {
-      checkPasswordStrength(e.target.value);
-    });
-
-    document.getElementById('security-save-btn').onclick = async function() {
-      const currentPassword = document.getElementById('security-current-password').value.trim();
-      const newPassword = document.getElementById('security-new-password').value.trim();
-      const confirmPassword = document.getElementById('security-confirm-password').value.trim();
-      const msg = document.getElementById('security-message');
-      msg.textContent = '';
-      msg.style.color = '';
-      msg.style.textShadow = '';
-      
-      if (!currentPassword || !newPassword || !confirmPassword) {
-        msg.textContent = 'Please fill in all password fields.';
-        msg.style.color = '#ff4f4f';
-        msg.style.textShadow = '0 0 8px #ff4f4f, 0 0 2px #ff4f4f';
-        return;
-      }
-      
-      if (newPassword !== confirmPassword) {
-        msg.textContent = 'New passwords do not match.';
-        msg.style.color = '#ff4f4f';
-        msg.style.textShadow = '0 0 8px #ff4f4f, 0 0 2px #ff4f4f';
-        return;
-      }
-      
-      const strengthMsg = document.getElementById('security-strength-msg').textContent.toLowerCase();
-      if (strengthMsg === 'weak') {
-        msg.textContent = 'Password must be at least medium strength.';
-        msg.style.color = '#ff4f4f';
-        msg.style.textShadow = '0 0 8px #ff4f4f, 0 0 2px #ff4f4f';
-        return;
-      }
-      
-      const payload = { password: newPassword, currentPassword };
-      const res = await fetch('/api/profile', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-      const data = await res.json();
-      
-      if (data.success) {
-        msg.textContent = 'Password updated successfully!';
-        msg.style.color = '#8aff8a';
-        msg.style.textShadow = '0 0 8px #8aff8a, 0 0 2px #8aff8a';
-        document.getElementById('security-current-password').value = '';
-        document.getElementById('security-new-password').value = '';
-        document.getElementById('security-confirm-password').value = '';
-        document.getElementById('security-strength-msg').textContent = '';
-      } else {
-        msg.textContent = data.message || 'Error updating password.';
-        msg.style.color = '#ff4f4f';
-        msg.style.textShadow = '0 0 8px #ff4f4f, 0 0 2px #ff4f4f';
-      }
-    };
 
     // Fetch and display license keys
     async function fetchLicenseKeys() {
       const list = document.getElementById('license-keys-list');
-      list.innerHTML = 'Loading license keys...';
+      list.innerHTML = '<div class="message">Loading license keys...</div>';
       try {
         const res = await fetch('/api/profile/license-keys');
         const data = await res.json();
         if (data.success && data.licenseKeys.length > 0) {
-          list.innerHTML = data.licenseKeys.map(k => `
-            <div class='license-key-item' data-key='${k.key}'>
-              <div><b>Key:</b> <span class='license-key-text'>${k.key}</span>
-                <button class='copy-btn' onclick="navigator.clipboard.writeText('${k.key}'); this.nextElementSibling.style.display='inline'; setTimeout(()=>this.nextElementSibling.style.display='none',1200)">Copy</button>
-                <span class='copied-float' style='display:none;'>Copied!</span>
-              </div>
-              <div><b>Product:</b> <span class='license-key-product'>${k.product || '-'}</span></div>
-              <div><b>Duration:</b> ${k.duration === '1m' ? '1 month' : k.duration === '1w' ? '1 week' : k.duration === '1d' ? '1 day' : k.duration}</div>
-              <div><b>Created:</b> ${new Date(k.createdAt).toLocaleDateString()}</div>
-              <div><b>Expires:</b> ${k.expiresAt ? new Date(k.expiresAt).toLocaleDateString() : '-'}</div>
-            </div>
-          `).join('');
+          // Filter out expired license keys
+          const currentDate = new Date();
+          const activeKeys = data.licenseKeys.filter(k => {
+            if (!k.expiresAt) return true; // Keep keys without expiration
+            return new Date(k.expiresAt) > currentDate;
+          });
+          
+          if (activeKeys.length > 0) {
+            list.innerHTML = activeKeys.map(k => {
+              const expiresDate = k.expiresAt ? new Date(k.expiresAt) : null;
+              const isExpiringSoon = expiresDate && (expiresDate - currentDate) < (7 * 24 * 60 * 60 * 1000); // 7 days
+              
+              return `
+                <div class="key-item">
+                  <div>
+                    <div class="key-text">${k.key}</div>
+                    <div style="color: #888; font-size: 12px; margin-top: 5px;">
+                      Product: ${k.product || '-'} | Duration: ${k.duration === '1m' ? '1 month' : k.duration === '1w' ? '1 week' : k.duration === '1d' ? '1 day' : k.duration}
+                    </div>
+                    <div style="color: #888; font-size: 12px;">
+                      Created: ${new Date(k.createdAt).toLocaleDateString()} | Expires: ${expiresDate ? expiresDate.toLocaleDateString() : 'Never'} ${isExpiringSoon ? '<span style="color: #ef4444; font-weight: bold;">(Expiring Soon!)</span>' : ''}
+                    </div>
+                  </div>
+                  <button class="copy-btn" onclick="navigator.clipboard.writeText('${k.key}'); this.textContent='Copied!'; setTimeout(()=>this.textContent='Copy',1200)">Copy</button>
+                </div>
+              `;
+            }).join('');
+          } else {
+            list.innerHTML = '<div class="message">No active license keys found. All your license keys have expired.</div>';
+          }
         } else {
-          list.innerHTML = '<div>No license keys found.</div>';
+          list.innerHTML = '<div class="message">No license keys found.</div>';
         }
       } catch (e) {
-        list.innerHTML = '<div>Error loading license keys.</div>';
+        list.innerHTML = '<div class="message error">Error loading license keys.</div>';
       }
     }
 
     // Fetch and display invite codes
     async function fetchInviteCodes() {
       const list = document.getElementById('invite-codes-list');
-      list.innerHTML = 'Loading invite codes...';
+      list.innerHTML = '<div class="message">Loading invite codes...</div>';
       try {
         const res = await fetch('/api/profile/invite-codes');
         const data = await res.json();
         if (data.success && data.inviteCodes.length > 0) {
           list.innerHTML = data.inviteCodes.map(code => `
-            <div class='invite-code-item'>
-              <span class='invite-code-text'>${code}</span>
-              <button class='copy-btn' onclick="navigator.clipboard.writeText('${code}'); this.nextElementSibling.style.display='inline'; setTimeout(()=>this.nextElementSibling.style.display='none',1200)">Copy</button>
-              <span class='copied-float' style='display:none;margin-left:8px;color:#8aff8a;'>Copied!</span>
+            <div class="invite-item">
+              <div class="invite-text">${code}</div>
+              <button class="copy-btn" onclick="navigator.clipboard.writeText('${code}'); this.textContent='Copied!'; setTimeout(()=>this.textContent='Copy',1200)">Copy</button>
             </div>
           `).join('');
         } else {
-          list.innerHTML = '<div>No active invite codes found.</div>';
+          list.innerHTML = '<div class="message">No active invite codes found.</div>';
         }
       } catch (e) {
-        list.innerHTML = '<div>Error loading invite codes.</div>';
+        list.innerHTML = '<div class="message error">Error loading invite codes.</div>';
+      }
+    }
+
+    // Fetch and display user orders
+    async function fetchOrders() {
+      const list = document.getElementById('orders-list');
+      list.innerHTML = '<div class="message">Loading orders...</div>';
+      try {
+        const res = await fetch('/api/user/orders');
+        const data = await res.json();
+        if (data.success && data.orders.length > 0) {
+          list.innerHTML = data.orders.map(order => {
+            const orderDate = new Date(order.createdAt).toLocaleDateString();
+            const total = order.totals ? order.totals.total : order.total || 0;
+            
+            return `
+              <div class="order-item">
+                <div class="order-header">
+                  <div class="order-id">${order.orderId}</div>
+                  <div class="order-total">$${total.toFixed(2)}</div>
+                </div>
+                <div class="order-details">
+                  <div>Date: ${orderDate}</div>
+                  <div>Status: <span class="order-status">${order.status}</span></div>
+                  <div>Items: ${order.items.map(item => `${item.name} (x${item.quantity})`).join(', ')}</div>
+                </div>
+                <div style="text-align: right;">
+                  <a href="/order-confirmation.html?orderId=${order.orderId}" class="view-btn">View Details</a>
+                </div>
+              </div>
+            `;
+          }).join('');
+        } else {
+          list.innerHTML = '<div class="message">No orders found.</div>';
+        }
+      } catch (e) {
+        list.innerHTML = '<div class="message error">Error loading orders.</div>';
+      }
+    }
+
+    // Logout function
+    async function logout() {
+      const modal = document.getElementById('confirm-modal');
+      if (modal) {
+        modal.classList.add('show');
+      }
+    }
+    
+    // Clear cart on logout
+    async function clearCartOnLogout() {
+      try {
+        // Clear local storage cart
+        localStorage.removeItem('hardwareCart');
+        
+        // Clear server cart if logged in
+        await fetch('/api/cart', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ cart: [] })
+        });
+      } catch (error) {
+        console.error('Error clearing cart on logout:', error);
+      }
+    }
+    
+    // Handle logout confirmation
+    async function confirmLogout() {
+      try {
+        // Clear cart before logout
+        await clearCartOnLogout();
+        
+        const response = await fetch('/api/logout', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' }
+        });
+        
+        if (response.ok) {
+          // Redirect to shop page after logout
+          window.location.href = '/';
+        }
+      } catch (error) {
+        console.error('Logout error:', error);
+      }
+    }
+    
+    // Cancel logout
+    function cancelLogout() {
+      const modal = document.getElementById('confirm-modal');
+      if (modal) {
+        modal.classList.remove('show');
+      }
+    }
+
+    // Password reset functionality
+    async function requestPasswordReset() {
+      const resetBtn = document.getElementById('reset-password-btn');
+      const resetMessage = document.getElementById('reset-message');
+      const email = document.getElementById('reset-email').value;
+      
+      if (!email) {
+        resetMessage.textContent = 'Please enter your email address';
+        resetMessage.className = 'message error';
+        return;
+      }
+      
+      try {
+        resetBtn.disabled = true;
+        resetBtn.textContent = 'Sending...';
+        
+        const response = await fetch('/api/password-reset-request', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+          resetMessage.textContent = 'Password reset email sent! Check your inbox and spam folder.';
+          resetMessage.className = 'message success';
+        } else {
+          resetMessage.textContent = data.message || 'Failed to send reset email';
+          resetMessage.className = 'message error';
+        }
+      } catch (error) {
+        console.error('Password reset error:', error);
+        resetMessage.textContent = 'Failed to send reset email. Please try again.';
+        resetMessage.className = 'message error';
+      } finally {
+        resetBtn.disabled = false;
+        resetBtn.textContent = 'Send Reset Email';
       }
     }
 
     // Initialize
     fetchProfile();
+    
+    // Set up modal event listeners when DOM is loaded
+    document.addEventListener('DOMContentLoaded', function() {
+      const confirmModal = document.getElementById('confirm-modal');
+      const confirmModalClose = document.getElementById('confirm-modal-close');
+      const confirmCancel = document.getElementById('confirm-cancel');
+      const confirmYes = document.getElementById('confirm-yes');
+
+      if (confirmModalClose) {
+        confirmModalClose.addEventListener('click', () => {
+          cancelLogout();
+        });
+      }
+
+      if (confirmCancel) {
+        confirmCancel.addEventListener('click', () => {
+          cancelLogout();
+        });
+      }
+
+      if (confirmYes) {
+        confirmYes.addEventListener('click', () => {
+          confirmLogout();
+        });
+      }
+
+      // Close modal when clicking outside
+      if (confirmModal) {
+        confirmModal.addEventListener('click', (e) => {
+          if (e.target === confirmModal) {
+            cancelLogout();
+          }
+        });
+      }
+
+      // Password reset button event listener
+      const resetPasswordBtn = document.getElementById('reset-password-btn');
+      if (resetPasswordBtn) {
+        resetPasswordBtn.addEventListener('click', requestPasswordReset);
+      }
+    });
   </script>
 </body>
 </html> 
